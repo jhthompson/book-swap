@@ -6,15 +6,19 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0001_initial'),
+        ("core", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='booklisting',
-            name='isbn',
-            field=isbn_field.fields.ISBNField(blank=True, max_length=28, validators=[isbn_field.validators.ISBNValidator], verbose_name='ISBN'),
+            model_name="booklisting",
+            name="isbn",
+            field=isbn_field.fields.ISBNField(
+                blank=True,
+                max_length=28,
+                validators=[isbn_field.validators.ISBNValidator],
+                verbose_name="ISBN",
+            ),
         ),
     ]
