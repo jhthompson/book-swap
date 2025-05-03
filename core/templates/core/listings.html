@@ -1,0 +1,9 @@
+<h1>Your Listings</h1>
+<ul>
+{% for listing in listings %}
+    <li>
+        {{ listing.title }}
+        <img src="{{ listing.cover_photo.url }}" alt="Cover for {{ listing.title }}" style="width:100px;"></img>
+    </li>
+{% endfor %}
+</ul>
