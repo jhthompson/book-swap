@@ -1,4 +1,3 @@
-from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
@@ -13,19 +12,8 @@ def index(request):
 
 
 @login_required
-def listings(request: HttpRequest):
+def listings(request):
     context = {}
-
-    if request.method == "POST":
-        form = BookListingForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            listing: BookListing = form.save(commit=False)
-            listing.owner = request.user
-            listing.save()
-            return redirect("listings")
-        else:
-            return render(request, "core/new_listing.html", {"form": form})
 
     context["listings"] = BookListing.objects.filter(owner=request.user)
 
@@ -66,6 +54,21 @@ def edit_listing(request, id):
 
 @login_required
 def new_listing(request):
-    form = BookListingForm()
+    if request.method == "POST":
+        form = BookListingForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            listing = BookListing(
+                title=form.cleaned_data["title"],
+                cover_photo=form.cleaned_data["cover_photo"],
+                isbn=form.cleaned_data["isbn"],
+                owner=request.user,
+            )
+            listing.full_clean()
+            listing.save()
+            return redirect("listings")
+
+    else:
+        form = BookListingForm()
 
     return render(request, "core/new_listing.html", {"form": form})

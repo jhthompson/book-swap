@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<form enctype="multipart/form-data" method="post" action="{% url 'listings'%}">
+<form enctype="multipart/form-data" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Submit">
