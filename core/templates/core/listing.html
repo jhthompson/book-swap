@@ -2,6 +2,7 @@
 
 {% block main %}
 <h1>{{ listing.title }}</h1>
+<p>Added {{ listing.created_at|timesince }} ago</p>
 <a href="{% url 'edit_listing' listing.id %}">Edit Listing</a>
 <img src="{{ listing.cover_photo.url }}" alt="Cover of {{ listing.title }}" style="max-width: 300px;">
 {% endblock main %}
