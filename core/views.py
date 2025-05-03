@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 
-from core.forms import CreateListingForm
+from core.forms import BookListingForm
 from core.models import BookListing
 
 
@@ -33,9 +33,29 @@ def listing(request, id):
 
 
 @login_required
+def edit_listing(request, id):
+    try:
+        listing = BookListing.objects.get(id=id, owner=request.user)
+    except BookListing.DoesNotExist:
+        return redirect("listings")
+
+    if request.method == "POST":
+        form = BookListingForm(request.POST, request.FILES, instance=listing)
+
+        if form.is_valid():
+            form.save()
+            return redirect("listing", id=listing.id)
+
+    else:
+        form = BookListingForm(instance=listing)
+
+    return render(request, "core/edit_listing.html", {"form": form})
+
+
+@login_required
 def new_listing(request):
     if request.method == "POST":
-        form = CreateListingForm(request.POST, request.FILES)
+        form = BookListingForm(request.POST, request.FILES)
 
         if form.is_valid():
             listing = BookListing(
@@ -49,6 +69,6 @@ def new_listing(request):
             return redirect("listings")
 
     else:
-        form = CreateListingForm()
+        form = BookListingForm()
 
     return render(request, "core/new_listing.html", {"form": form})
