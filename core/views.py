@@ -58,13 +58,8 @@ def new_listing(request):
         form = BookListingForm(request.POST, request.FILES)
 
         if form.is_valid():
-            listing = BookListing(
-                title=form.cleaned_data["title"],
-                cover_photo=form.cleaned_data["cover_photo"],
-                isbn=form.cleaned_data["isbn"],
-                owner=request.user,
-            )
-            listing.full_clean()
+            listing: BookListing = form.save(commit=False)
+            listing.owner = request.user
             listing.save()
             return redirect("listings")
 
