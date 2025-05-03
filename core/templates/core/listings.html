@@ -2,7 +2,7 @@
 <ul>
 {% for listing in listings %}
     <li>
-        {{ listing.title }}
+        <a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
         <img src="{{ listing.cover_photo.url }}" alt="Cover for {{ listing.title }}" style="width:100px;"></img>
     </li>
 {% endfor %}

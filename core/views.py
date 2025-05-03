@@ -21,6 +21,18 @@ def listings(request):
 
 
 @login_required
+def listing(request, id):
+    context = {}
+
+    try:
+        context["listing"] = BookListing.objects.get(id=id, owner=request.user)
+    except BookListing.DoesNotExist:
+        return redirect("listings")
+
+    return render(request, "core/listing.html", context)
+
+
+@login_required
 def new_listing(request):
     if request.method == "POST":
         form = CreateListingForm(request.POST, request.FILES)
