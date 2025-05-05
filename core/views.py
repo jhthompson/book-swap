@@ -1,12 +1,22 @@
+from django import forms
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
-from core.forms import BookListingForm
-from core.models import BookListing
+from core.forms import (
+    BookListingForm,
+    BookListingSelectionForm,
+    BookListingSelectionFormSet,
+)
+from core.models import BookListing, BookSwap
 
 
 def index(request):
     context = {}
+
+    if request.user.is_authenticated:
+        context["listings"] = BookListing.objects.exclude(owner=request.user)
 
     return render(request, "core/index.html", context)
 
@@ -67,3 +77,68 @@ def new_listing(request):
         form = BookListingForm()
 
     return render(request, "core/new_listing.html", {"form": form})
+
+
+@login_required
+def swaps(request):
+    context = {}
+
+    context["swaps"] = BookSwap.objects.filter(
+        proposed_by=request.user
+    ) | BookSwap.objects.filter(proposed_to=request.user)
+
+    return render(request, "core/swaps.html", context)
+
+
+@login_required
+def new_swap(request: HttpRequest):
+    if request.method == "POST":
+        formset = forms.formset_factory(BookListingSelectionForm)(request.POST)
+
+        if formset.is_valid():
+            print(formset.cleaned_data)
+            # book_swap = BookSwap.objects.create()
+
+            return HttpResponse("Swap created!")
+
+    context = {}
+
+    proposed_by = request.user
+    proposed_to_id = request.GET.get("proposed_to")
+    proposed_to = User.objects.get(id=proposed_to_id)
+    requested_book_listing_ids = request.GET.getlist("requested_book_listing_ids")
+    requested_book_listings = BookListing.objects.filter(
+        id__in=requested_book_listing_ids, owner=proposed_to
+    )
+
+    context["proposed_by"] = proposed_by
+    context["proposed_to"] = proposed_to
+
+    BookListingSelectionFormSetFactory = forms.formset_factory(
+        form=BookListingSelectionForm,
+        formset=BookListingSelectionFormSet,
+        extra=0,
+        min_num=2,
+        max_num=2,
+    )
+    context["formset"] = BookListingSelectionFormSetFactory(
+        owners=[proposed_to, proposed_by],
+        initial=[
+            {"book_listings": requested_book_listings},
+            {"book_listings": []},
+        ],
+    )
+
+    return render(request, "core/new_swap.html", context)
+
+
+@login_required
+def swap(request: HttpRequest, id: int):
+    context = {}
+
+    try:
+        context["swap"] = BookSwap.objects.get(id=id)
+    except BookSwap.DoesNotExist:
+        return redirect("index")
+
+    return render(request, "core/swap.html", context)

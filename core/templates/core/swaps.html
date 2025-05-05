@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+{% block main %}
+<h1>Your Swaps</h1>
+<ul>
+    {% for swap in swaps %}
+        <li>
+            <h2>
+                <a href="{% url 'swap' swap.id %}">Proposed Swap with {{ swap.proposed_to.username }}</a>
+            </h2>
+            <p>Created {{ swap.proposed_on|timesince }} ago</p>
+            <h3>{{ swap.proposed_to.username }}'s books</h3>
+            <ul>
+                {% for book in swap.requested_books.all %}
+                    <li>{{ book.title }}</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Your Books</h3>
+            <ul>
+                {% for book in swap.offered_books.all %}
+                    <li>{{ book.title }}</li>
+                {% endfor %}
+            </ul>
+
+        </li>
+    {% endfor %}
+</ul>
+{% endblock main %}

@@ -8,3 +8,35 @@ class BookListingForm(forms.ModelForm):
     class Meta:
         model = BookListing
         fields = ["title", "cover_photo", "isbn"]
+
+
+class BookListingSelectionFormSet(forms.BaseFormSet):
+    def __init__(self, *args, **kwargs):
+        owners = kwargs.pop("owners", [])
+        super(BookListingSelectionFormSet, self).__init__(*args, **kwargs)
+        self.owners = owners
+
+    def get_form_kwargs(self, form_index):
+        form_kwargs = super(BookListingSelectionFormSet, self).get_form_kwargs(
+            form_index
+        )
+        if form_index < len(self.owners):
+            form_kwargs["owner"] = self.owners[form_index]
+        return form_kwargs
+
+
+class BookListingSelectionForm(forms.Form):
+    book_listings = forms.ModelMultipleChoiceField(
+        queryset=BookListing.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        label="Select books",
+    )
+
+    def __init__(self, *args, **kwargs):
+        owner = kwargs.pop("owner", None)
+        super().__init__(*args, **kwargs)
+        if owner:
+            self.fields["book_listings"].queryset = BookListing.objects.filter(
+                owner=owner
+            )
+            self.fields["book_listings"].label = f"{owner.username}'s books"

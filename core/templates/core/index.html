@@ -5,5 +5,17 @@
 <p>BookSwap is a platform where you can list your books for trade.</p>
 <p>Once you're logged in, you can view your listings, add new books, and manage your account.</p>
 <p>Happy swapping!</p>
+
+<h2>Recommended Books</h2>
+<ul>
+{% for listing in listings %}
+
+<li>
+    <h3>{{ listing.title }} <a href="{% url 'new_swap' %}{% querystring None proposed_to=listing.owner.id requested_book_listing_ids=listing.id %}">SWAP</a></h3>
+    
+</li>
+    {% endfor %}
+</ul>
+
 {% endblock main %}
 
