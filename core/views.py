@@ -96,9 +96,21 @@ def new_swap(request: HttpRequest):
 
         if formset.is_valid():
             print(formset.cleaned_data)
-            # book_swap = BookSwap.objects.create()
+            requested_book_listings = formset.cleaned_data[0]["book_listings"]
+            offered_book_listings = formset.cleaned_data[1]["book_listings"]
 
-            return HttpResponse("Swap created!")
+            proposed_to = requested_book_listings[0].owner
+            proposed_by = offered_book_listings[0].owner
+
+            book_swap = BookSwap.objects.create(
+                proposed_by=proposed_by,
+                proposed_to=proposed_to,
+            )
+            book_swap.offered_books.set(offered_book_listings)
+            book_swap.requested_books.set(requested_book_listings)
+            book_swap.save()
+
+            return redirect("swap", book_swap.id)
 
     context = {}
 
