@@ -3,7 +3,6 @@ from django.urls import path
 from core import views
 
 urlpatterns = [
-    path("", views.index, name="index"),
     # listings
     path("listings", views.listings, name="listings"),
     path("listings/new", views.new_listing, name="new_listing"),
@@ -13,4 +12,6 @@ urlpatterns = [
     path("swaps", views.swaps, name="swaps"),
     path("swaps/new", views.new_swap, name="new_swap"),
     path("swaps/<int:id>", views.swap, name="swap"),
+    # index
+    path("", views.index, name="index"),
 ]
