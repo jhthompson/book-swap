@@ -136,7 +136,12 @@ def swap(request: HttpRequest, id: int):
     context = {}
 
     try:
-        context["swap"] = BookSwap.objects.get(id=id)
+        swap = BookSwap.objects.get(id=id)
+        context["swap"] = swap
+
+        if swap.proposed_by != request.user and swap.proposed_to != request.user:
+            raise BookSwap.DoesNotExist
+
     except BookSwap.DoesNotExist:
         return redirect("index")
 

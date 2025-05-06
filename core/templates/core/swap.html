@@ -1,7 +1,14 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1>Proposed Swap with {{ swap.proposed_to.username }}</h1>
+<h1>{{swap.proposed_by.username}} wants to swap with {{ swap.proposed_to.username }}</h1>
+
+<h2>{{ swap.proposed_by.username }}'s books</h2>
+<ul>
+    {% for book in swap.offered_books.all %}
+        <li>{{ book.title }}</li>
+    {% endfor %}
+</ul>
 
 <h2>{{ swap.proposed_to.username }}'s books</h2>
 <ul>
@@ -10,13 +17,14 @@
     {% endfor %}
 </ul>
 
-<h2>Your Books</h2>
-<ul>
-    {% for book in swap.offered_books.all %}
-        <li>{{ book.title }}</li>
-    {% endfor %}
-</ul>
-
-<button>Cancel Swap</button>
+{% if swap.proposed_by == request.user %}
+    <button>Cancel Swap</button>
+{% else %}
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="accept">Accept</button>
+        <button type="submit" name="decline">Decline</button>
+    </form>
+{% endif %}
 
 {% endblock main %}
