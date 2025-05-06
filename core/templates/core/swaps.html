@@ -1,9 +1,11 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1>Your Swaps</h1>
+<h1>Swaps</h1>
+
+<h2>Proposed by you</h2>
 <ul>
-    {% for swap in swaps %}
+    {% for swap in swaps_by_you %}
         <li>
             <h2>
                 <a href="{% url 'swap' swap.id %}">Proposed Swap with {{ swap.proposed_to.username }}</a>
@@ -24,6 +26,35 @@
             </ul>
 
         </li>
+    {% empty %}
+        <li>No swaps proposed by you.</li>
     {% endfor %}
 </ul>
+
+<h2>Proposed to you</h2>
+<ul>
+    {% for swap in swaps_to_you %}
+        <li>
+            <h2>
+                <a href="{% url 'swap' swap.id %}">Swap proposed by {{ swap.proposed_by.username }}</a>
+            </h2>
+            <p>Created {{ swap.proposed_on|timesince }} ago</p>
+            <h3>{{ swap.proposed_by.username }}'s books</h3>
+            <ul>
+                {% for book in swap.requested_books.all %}
+                    <li>{{ book.title }}</li>
+                {% endfor %}
+            </ul>
+
+            <h3>Your Books</h3>
+            <ul>
+                {% for book in swap.offered_books.all %}
+                    <li>{{ book.title }}</li>
+                {% endfor %}
+            </ul>
+
+        </li>
+    {% empty %}
+        <li>No swaps proposed to you.</li>
+    {% endfor %}
 {% endblock main %}

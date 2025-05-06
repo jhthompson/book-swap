@@ -83,9 +83,8 @@ def new_listing(request):
 def swaps(request):
     context = {}
 
-    context["swaps"] = BookSwap.objects.filter(
-        proposed_by=request.user
-    ) | BookSwap.objects.filter(proposed_to=request.user)
+    context["swaps_by_you"] = BookSwap.objects.filter(proposed_by=request.user)
+    context["swaps_to_you"] = BookSwap.objects.filter(proposed_to=request.user)
 
     return render(request, "core/swaps.html", context)
 
