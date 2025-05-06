@@ -95,7 +95,6 @@ def new_swap(request: HttpRequest):
         formset = forms.formset_factory(BookListingSelectionForm)(request.POST)
 
         if formset.is_valid():
-            print(formset.cleaned_data)
             requested_book_listings = formset.cleaned_data[0]["book_listings"]
             offered_book_listings = formset.cleaned_data[1]["book_listings"]
 
