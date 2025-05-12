@@ -40,3 +40,11 @@ class BookListingSelectionForm(forms.Form):
                 owner=owner
             )
             self.fields["book_listings"].label = f"{owner.username}'s books"
+
+
+class AcceptSwapForm(forms.Form):
+    message = forms.CharField(
+        label="How should they contact you to coordinate the swap?",
+        widget=forms.Textarea,
+        help_text="Email, text message, WhatsApp, etc.",
+    )

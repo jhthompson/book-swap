@@ -2,6 +2,19 @@
 
 {% block main %}
 <h1>{{swap.proposed_by.username}} wants to swap with {{ swap.proposed_to.username }}</h1>
+<p>Proposed on: {{ swap.created_at }}</p>
+<p>Status: {{ swap.status }}</p>
+
+<h2>Timeline</h2>
+<ul>
+    {% for entry in swap.get_timeline %}
+        {% if entry.type == 'event' %}
+            <li>{{ entry.item.get_type_display }} on {{ entry.item.created_at }}</li>
+        {% elif entry.type == 'message' %}
+            <li>{{ entry.item.content }} on {{ entry.item.created_at }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
 
 <h2>{{ swap.proposed_by.username }}'s books</h2>
 <ul>
@@ -17,14 +30,21 @@
     {% endfor %}
 </ul>
 
-{% if swap.proposed_by == request.user %}
-    <button>Cancel Swap</button>
-{% else %}
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit" name="accept">Accept</button>
-        <button type="submit" name="decline">Decline</button>
-    </form>
+{% if swap.status == 'PROPOSED' %}
+    {% if swap.proposed_by == request.user %}
+        <a href="{% url 'cancel_swap' swap.id %}">Cancel Swap</a>
+    {% else %}
+        <a href="{% url 'accept_swap' swap.id %}">Accept Swap</a>
+        <a href="{% url 'decline_swap' swap.id %}">Decline Swap</a>
+    {% endif %}
+{% elif swap.status == 'CANCELLED' %}
+
+{% elif swap.status == 'ACCEPTED' %}
+
+{% elif swap.status == 'DECLINED' %}
+
 {% endif %}
+
+
 
 {% endblock main %}

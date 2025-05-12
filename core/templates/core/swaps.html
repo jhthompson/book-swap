@@ -10,7 +10,7 @@
             <h2>
                 <a href="{% url 'swap' swap.id %}">Proposed Swap with {{ swap.proposed_to.username }}</a>
             </h2>
-            <p>Created {{ swap.proposed_on|timesince }} ago</p>
+            <p>Created {{ swap.created_at|timesince }} ago</p>
             <h3>{{ swap.proposed_to.username }}'s books</h3>
             <ul>
                 {% for book in swap.requested_books.all %}
@@ -38,7 +38,7 @@
             <h2>
                 <a href="{% url 'swap' swap.id %}">Swap proposed by {{ swap.proposed_by.username }}</a>
             </h2>
-            <p>Created {{ swap.proposed_on|timesince }} ago</p>
+            <p>Created {{ swap.created_at|timesince }} ago</p>
             <h3>{{ swap.proposed_by.username }}'s books</h3>
             <ul>
                 {% for book in swap.requested_books.all %}

@@ -6,22 +6,53 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0003_booklisting_created_at'),
+        ("core", "0003_booklisting_created_at"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='BookSwap',
+            name="BookSwap",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('proposed_on', models.DateTimeField(auto_now_add=True)),
-                ('offered_books', models.ManyToManyField(related_name='offered_books', to='core.booklisting')),
-                ('proposed_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='proposed_by', to=settings.AUTH_USER_MODEL)),
-                ('proposed_to', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='proposed_to', to=settings.AUTH_USER_MODEL)),
-                ('requested_books', models.ManyToManyField(related_name='requested_books', to='core.booklisting')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("proposed_on", models.DateTimeField(auto_now_add=True)),
+                (
+                    "offered_books",
+                    models.ManyToManyField(
+                        related_name="offered_books", to="core.booklisting"
+                    ),
+                ),
+                (
+                    "proposed_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="proposed_by",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "proposed_to",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="proposed_to",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "requested_books",
+                    models.ManyToManyField(
+                        related_name="requested_books", to="core.booklisting"
+                    ),
+                ),
             ],
         ),
     ]

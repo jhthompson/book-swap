@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 from core.forms import (
+    AcceptSwapForm,
     BookListingForm,
     BookListingSelectionForm,
     BookListingSelectionFormSet,
@@ -157,3 +158,52 @@ def swap(request: HttpRequest, id: int):
         return redirect("index")
 
     return render(request, "core/swap.html", context)
+
+
+@login_required
+def cancel_swap(request: HttpRequest, id: int):
+    try:
+        swap = BookSwap.objects.get(id=id)
+        if swap.proposed_by != request.user:
+            raise BookSwap.DoesNotExist
+    except BookSwap.DoesNotExist:
+        return redirect("index")
+
+    return render(request, "core/cancel_swap.html", context={"swap": swap})
+
+
+@login_required
+def accept_swap(request: HttpRequest, id: int):
+    try:
+        swap = BookSwap.objects.get(id=id)
+        if swap.proposed_to != request.user:
+            raise BookSwap.DoesNotExist
+    except BookSwap.DoesNotExist:
+        return redirect("index")
+
+    if request.method == "POST":
+        form = AcceptSwapForm(request.POST)
+
+        if form.is_valid():
+            message = form.cleaned_data["message"]
+            swap.accept(user=request.user, message=message)
+
+            return redirect("swaps")
+
+    return render(
+        request,
+        "core/accept_swap.html",
+        context={"swap": swap, "form": AcceptSwapForm()},
+    )
+
+
+@login_required
+def decline_swap(request: HttpRequest, id: int):
+    try:
+        swap = BookSwap.objects.get(id=id)
+        if swap.proposed_to != request.user:
+            raise BookSwap.DoesNotExist
+    except BookSwap.DoesNotExist:
+        return redirect("index")
+
+    return render(request, "core/decline_swap.html", context={"swap": swap})
