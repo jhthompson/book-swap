@@ -1,24 +1,40 @@
-<h1>
-    <a href="/">BookSwap</a>
-</h1>
-<nav>
-    <ul>
-        <li><a href="{% url 'listings' %}">Your Listings</a></li>
-        <li><a href="{% url 'new_listing' %}">New Listing</a></li>
-        <li><a href="{% url 'swaps' %}">Your Swaps</a></li>
-    </ul>
-</nav>
+{% load static %}
 
-<header>
-{% if user.is_authenticated %}
-Hi {{ user.username }}!
-<form action="{% url 'logout' %}" method="post">
-  {% csrf_token %}
-  <button type="submit">Log Out</button>
-</form>
-{% else %}
-<p>You are not logged in</p>
-<a href="{% url 'login' %}">Log In</a>
-{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSwap</title>
+    <link rel="stylesheet" href="{% static 'core/css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'core/css/base.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ol class="cluster max-inline-size:none list-style:none padding:0">
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="{% url 'listings' %}">Your Listings</a></li>
+                <li><a href="{% url 'new_listing' %}">New Listing</a></li>
+                <li><a href="{% url 'swaps' %}">Your Swaps</a></li>
+                <li>
+                    {% if user.is_authenticated %}  
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit">Log Out</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}">Log In</a>
+                    {% endif %}
+                </li>
+            </ol>
+        </nav>
+    </header>
 
-{% block main %}{% endblock main %}
+    <main class="center">
+        {% block main %}{% endblock main %}
+    </main>
+
+</body>
+</html>
+
