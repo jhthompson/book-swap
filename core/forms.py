@@ -8,6 +8,11 @@ class BookListingForm(forms.ModelForm):
     class Meta:
         model = BookListing
         fields = ["title", "cover_photo", "isbn"]
+        widgets = {
+            "cover_photo": forms.ClearableFileInput(
+                attrs={"capture": "environment", "accept": "image/*"}
+            ),
+        }
 
 
 class BookListingSelectionFormSet(forms.BaseFormSet):
