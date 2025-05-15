@@ -7,13 +7,13 @@
 <p>Happy swapping!</p>
 
 <h2>Recommended Books</h2>
-<ul>
-{% for listing in listings %}
-
-<li>
-    <h3>{{ listing.title }} <a href="{% url 'new_swap' %}{% querystring None proposed_to=listing.owner.id requested_book_listing_ids=listing.id %}">SWAP</a></h3>
-    
-</li>
+<ul class="reel padding:0">
+    {% for listing in listings %}
+        <li class="list-style:none" style="max-width: 300px; display: grid;">
+            <h3 class="margin:0">{{ listing.title }}</h3>
+            <img src="{{ listing.cover_photo.url }}" style="max-width: 100px"/>
+            <a href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">SWAP</a>
+        </li>
     {% endfor %}
 </ul>
 
