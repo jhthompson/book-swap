@@ -1,10 +1,10 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1>Swaps</h1>
+<h1 class="center text-align:center color-primary">Swaps</h1>
 
-<h2>Proposed by you</h2>
-<ul>
+<h2 class="center text-align:center color-primary">Proposed by you</h2>
+<ul class="center">
     {% for swap in swaps_by_you %}
         <li>
             <h2>
@@ -31,8 +31,8 @@
     {% endfor %}
 </ul>
 
-<h2>Proposed to you</h2>
-<ul>
+<h2 class="center text-align:center color-primary">Proposed to you</h2>
+<ul class="center">
     {% for swap in swaps_to_you %}
         <li>
             <h2>

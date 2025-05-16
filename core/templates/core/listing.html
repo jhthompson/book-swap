@@ -1,8 +1,12 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1>{{ listing.title }}</h1>
-<p>Added {{ listing.created_at|timesince }} ago</p>
-<a href="{% url 'edit_listing' listing.id %}">Edit Listing</a>
-<img src="{{ listing.cover_photo.url }}" alt="Cover of {{ listing.title }}" style="max-width: 300px;">
+<div class="stack center">
+    <h1 class="text-align:center color-primary">{{ listing.title }}</h1>
+    <p class="text-align:center">Added {{ listing.created_at|timesince }} ago</p>
+    <p class="text-align:center">
+        <a href="{% url 'edit_listing' listing.id %}">Edit Listing</a>
+    </p>
+    <img class="center" src="{{ listing.cover_photo.url }}" alt="Cover of {{ listing.title }}" style="max-width: 300px;">
+</div>
 {% endblock main %}

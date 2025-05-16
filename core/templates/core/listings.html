@@ -1,12 +1,17 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1>Your Listings</h1>
-<ul>
+<h1 class="center text-align:center color-primary">Your Listings</h1>
+<ul class="center stack">
 {% for listing in listings %}
-    <li>
-        <a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
+    <li class="box list-style:none" style="display: flex; gap: var(--s0)">
         <img src="{{ listing.cover_photo.url }}" alt="Cover for {{ listing.title }}" style="width:100px;"></img>
+        <div>
+            <a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
+            <p>
+                <strong>Created:</strong> {{ listing.created_at|date:"F j, Y" }}
+            </p>
+        </div>
     </li>
 {% endfor %}
 </ul>

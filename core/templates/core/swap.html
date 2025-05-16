@@ -1,12 +1,12 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1>{{swap.proposed_by.username}} wants to swap with {{ swap.proposed_to.username }}</h1>
-<p>Proposed on: {{ swap.created_at }}</p>
-<p>Status: {{ swap.status }}</p>
+<h1 class="center text-align:center color-primary">{{swap.proposed_by.username}} wants to swap with {{ swap.proposed_to.username }}</h1>
+<p class="center text-align:center">Proposed on: {{ swap.created_at }}</p>
+<p class="center text-align:center">Status: {{ swap.status }}</p>
 
-<h2>Timeline</h2>
-<ul>
+<h2 class="center">Timeline</h2>
+<ul class="center">
     {% for entry in swap.get_timeline %}
         {% if entry.type == 'event' %}
             <li>{{ entry.item.get_type_display }} on {{ entry.item.created_at }}</li>
@@ -16,15 +16,15 @@
     {% endfor %}
 </ul>
 
-<h2>{{ swap.proposed_by.username }}'s books</h2>
-<ul>
+<h2 class="center">{{ swap.proposed_by.username }}'s books</h2>
+<ul class="center">
     {% for book in swap.offered_books.all %}
         <li>{{ book.title }}</li>
     {% endfor %}
 </ul>
 
-<h2>{{ swap.proposed_to.username }}'s books</h2>
-<ul>
+<h2 class="center">{{ swap.proposed_to.username }}'s books</h2>
+<ul class="center">
     {% for book in swap.requested_books.all %}
         <li>{{ book.title }}</li>
     {% endfor %}
