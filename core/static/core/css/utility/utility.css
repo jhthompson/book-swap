@@ -1,0 +1,91 @@
+.stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.stack>* {
+    margin-block: 0;
+}
+
+.stack>*+* {
+    margin-block-start: var(--space, 1.5rem);
+}
+
+.box {
+    padding: var(--s0);
+    border: var(--border-thin, 1px) solid;
+}
+
+.box * {
+    color: inherit;
+}
+
+.center {
+    box-sizing: content-box;
+    margin-inline: auto;
+    max-inline-size: var(--measure, 65ch);
+}
+
+.cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space, 1rem);
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.reel {
+    display: flex;
+    block-size: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-color: #fff #000;
+}
+
+.reel>* {
+    flex: 0 0 auto;
+}
+
+
+.reel>img {
+    block-size: 100%;
+    flex-basis: auto;
+    width: auto;
+}
+
+.reel>*+* {
+    margin-inline-start: 1rem;
+}
+
+.reel.overflowing {
+    padding-block-end: 1rem;
+}
+
+.max-inline-size\:none {
+    max-inline-size: none;
+}
+
+.list-style\:none {
+    list-style: none;
+}
+
+.padding\:0 {
+    padding: 0;
+}
+
+.text-align\:center {
+    text-align: center;
+}
+
+.margin-inline-start\:s-2 {
+    margin-inline-start: var(--s-2);
+}
+
+.color-primary {
+    color: var(--primary);
+}
+
+.margin-block-start\:s0 {
+    margin-block-start: var(--s0);
+}

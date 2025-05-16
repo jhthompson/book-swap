@@ -1,21 +1,40 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1>Welcome to BookSwap!</h1>
-<p>BookSwap is a platform where you can list your books for trade.</p>
-<p>Once you're logged in, you can view your listings, add new books, and manage your account.</p>
-<p>Happy swapping!</p>
+<div class="stack">
+    <h1 class="center text-align:center color-primary">Find Your Next Read, Share Your Favorites</h1>
+    <p class="center text-align:center">Join our community of readers and exchange books with people nearby.</p>
 
-<h2>Recommended Books</h2>
-<ul class="reel padding:0">
-    {% for listing in listings %}
-        <li class="list-style:none" style="max-width: 300px; display: grid;">
-            <h3 class="margin:0">{{ listing.title }}</h3>
-            <img src="{{ listing.cover_photo.url }}" style="max-width: 100px"/>
-            <a href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">SWAP</a>
-        </li>
-    {% endfor %}
-</ul>
+    <form class="center text-align:center" action="{% url 'index' %}" method="get">
+        <input type="text" name="search" placeholder="Search for books by title, author, or genre...">
+        <button>
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+
+    <div>
+        <h2 class="center text-align:center color-primary">Recommended Books</h2>
+        <ul class="reel padding:0">
+            {% for listing in listings %}
+                <li class="list-style:none">
+                    <article class="book-card box stack">
+                        <img src="{{ listing.cover_photo.url }}" style="max-width: 100px"/>
+                        <div>
+                            <h3 class="margin:0">{{ listing.title }}</h3>
+                            <a href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">
+                                Swap<i class="bi bi-arrow-left-right margin-inline-start:s-2"></i> 
+                            </a>
+                        </div>
+
+                    </article>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+
 
 {% endblock main %}
 
