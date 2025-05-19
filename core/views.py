@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 
 from core.forms import (
     AcceptSwapForm,
@@ -174,7 +175,10 @@ def cancel_swap(request: HttpRequest, id: int):
     try:
         swap = BookSwap.objects.get(id=id)
         if swap.proposed_by != request.user:
-            raise BookSwap.DoesNotExist
+            raise BookSwap.DoesNotExist()
+
+        if swap.cancel(request.user):
+            return redirect("swap", swap.id)
     except BookSwap.DoesNotExist:
         return redirect("index")
 
@@ -195,9 +199,11 @@ def accept_swap(request: HttpRequest, id: int):
 
         if form.is_valid():
             message = form.cleaned_data["message"]
-            swap.accept(user=request.user, message=message)
 
-            return redirect("swaps")
+            if swap.accept(user=request.user, message=message):
+                return redirect("swaps")
+            else:
+                raise PermissionDenied()
 
     return render(
         request,

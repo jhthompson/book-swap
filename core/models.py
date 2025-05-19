@@ -92,6 +92,12 @@ class BookSwap(models.Model):
         if self.status == self.Status.PROPOSED:
             self.status = self.Status.CANCELLED
             self.save()
+
+            BookSwapEvent.objects.create(
+                swap=self,
+                user=user,
+                type=BookSwapEvent.Type.CANCEL,
+            )
             return True
 
         return False

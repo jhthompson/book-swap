@@ -27,7 +27,7 @@
     </div>
 
     <div>
-        <ul class="list-style:none padding:0">
+        <ul class="stack list-style:none padding:0">
             {% for entry in swap.get_timeline %}
                 {% if entry.type == 'event' %}
                     <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap on {{ entry.item.created_at }}</li>
