@@ -5,48 +5,56 @@
 <p class="center text-align:center">Proposed on: {{ swap.created_at }}</p>
 <p class="center text-align:center">Status: {{ swap.get_status_display }}</p>
 
-<h2 class="center">Timeline</h2>
-<ul class="center">
-    {% for entry in swap.get_timeline %}
-        {% if entry.type == 'event' %}
-            <li>{{ entry.item.get_type_display }} on {{ entry.item.created_at }}</li>
-        {% elif entry.type == 'message' %}
-            <li>{{ entry.item.content }} on {{ entry.item.created_at }}</li>
+<div class="stack center">
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <h2>{{ swap.proposed_by.username }}'s books</h2>
+            <ul>
+                {% for book in swap.offered_books.all %}
+                    <li>{{ book.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div>
+            <h2>{{ swap.proposed_to.username }}'s books</h2>
+            <ul>
+                {% for book in swap.requested_books.all %}
+                    <li>{{ book.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div>
+        <ul class="list-style:none padding:0">
+            {% for entry in swap.get_timeline %}
+                {% if entry.type == 'event' %}
+                    <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap on {{ entry.item.created_at }}</li>
+                {% elif entry.type == 'message' %}
+                    <li class="box">{{ entry.item.content }} on {{ entry.item.created_at }}</li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    {% if swap.status == 'PROPOSED' %}
+    <div class="text-align:end">
+        {% if swap.proposed_by == request.user %}
+            <a href="{% url 'cancel_swap' swap.id %}">Cancel Swap</a>
+        {% else %}
+            <a href="{% url 'accept_swap' swap.id %}">Accept Swap</a>
+            <a href="{% url 'decline_swap' swap.id %}">Decline Swap</a>
         {% endif %}
-    {% endfor %}
-</ul>
+    </div>
+    {% elif swap.status == 'CANCELLED' %}
 
-<h2 class="center">{{ swap.proposed_by.username }}'s books</h2>
-<ul class="center">
-    {% for book in swap.offered_books.all %}
-        <li>{{ book.title }}</li>
-    {% endfor %}
-</ul>
+    {% elif swap.status == 'ACCEPTED' %}
 
-<h2 class="center">{{ swap.proposed_to.username }}'s books</h2>
-<ul class="center">
-    {% for book in swap.requested_books.all %}
-        <li>{{ book.title }}</li>
-    {% endfor %}
-</ul>
+    {% elif swap.status == 'DECLINED' %}
 
-{% if swap.status == 'PROPOSED' %}
-<div class="center">
-    {% if swap.proposed_by == request.user %}
-        <a href="{% url 'cancel_swap' swap.id %}">Cancel Swap</a>
-    {% else %}
-        <a href="{% url 'accept_swap' swap.id %}">Accept Swap</a>
-        <a href="{% url 'decline_swap' swap.id %}">Decline Swap</a>
     {% endif %}
 </div>
-{% elif swap.status == 'CANCELLED' %}
-
-{% elif swap.status == 'ACCEPTED' %}
-
-{% elif swap.status == 'DECLINED' %}
-
-{% endif %}
-
 
 
 {% endblock main %}

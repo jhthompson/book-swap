@@ -77,6 +77,10 @@
     text-align: center;
 }
 
+.text-align\:end {
+    text-align: end;
+}
+
 .margin-inline-start\:s-2 {
     margin-inline-start: var(--s-2);
 }
