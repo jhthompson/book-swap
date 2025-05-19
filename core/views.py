@@ -10,7 +10,7 @@ from core.forms import (
     BookListingSelectionForm,
     BookListingSelectionFormSet,
 )
-from core.models import BookListing, BookSwap
+from core.models import BookListing, BookSwap, BookSwapEvent
 
 
 def index(request):
@@ -121,6 +121,12 @@ def new_swap(request: HttpRequest):
             book_swap.offered_books.set(offered_book_listings)
             book_swap.requested_books.set(requested_book_listings)
             book_swap.save()
+
+            BookSwapEvent.objects.create(
+                swap=book_swap,
+                user=proposed_by,
+                type=BookSwapEvent.Type.PROPOSE,
+            )
 
             return redirect("swap", book_swap.id)
     else:

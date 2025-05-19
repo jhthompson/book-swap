@@ -22,9 +22,8 @@
 }
 
 .center {
-    box-sizing: content-box;
     margin-inline: auto;
-    max-inline-size: var(--measure, 65ch);
+    max-inline-size: var(--measure, 40rem);
 }
 
 .cluster {

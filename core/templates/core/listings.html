@@ -2,7 +2,7 @@
 
 {% block main %}
 <h1 class="center text-align:center color-primary">Your Listings</h1>
-<ul class="center stack">
+<ul class="center stack padding:0">
 {% for listing in listings %}
     <li class="box list-style:none" style="display: flex; gap: var(--s0)">
         <img src="{{ listing.cover_photo.url }}" alt="Cover for {{ listing.title }}" style="width:100px;"></img>

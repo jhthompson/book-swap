@@ -3,7 +3,7 @@
 {% block main %}
 <h1 class="center text-align:center color-primary">{{swap.proposed_by.username}} wants to swap with {{ swap.proposed_to.username }}</h1>
 <p class="center text-align:center">Proposed on: {{ swap.created_at }}</p>
-<p class="center text-align:center">Status: {{ swap.status }}</p>
+<p class="center text-align:center">Status: {{ swap.get_status_display }}</p>
 
 <h2 class="center">Timeline</h2>
 <ul class="center">
@@ -31,12 +31,14 @@
 </ul>
 
 {% if swap.status == 'PROPOSED' %}
+<div class="center">
     {% if swap.proposed_by == request.user %}
         <a href="{% url 'cancel_swap' swap.id %}">Cancel Swap</a>
     {% else %}
         <a href="{% url 'accept_swap' swap.id %}">Accept Swap</a>
         <a href="{% url 'decline_swap' swap.id %}">Decline Swap</a>
     {% endif %}
+</div>
 {% elif swap.status == 'CANCELLED' %}
 
 {% elif swap.status == 'ACCEPTED' %}

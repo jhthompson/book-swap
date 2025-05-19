@@ -108,6 +108,7 @@ class BookSwap(models.Model):
 
 class BookSwapEvent(models.Model):
     class Type(models.TextChoices):
+        PROPOSE = "PROPOSE", "Proposed"
         CANCEL = "CANCEL", "Cancelled"
         ACCEPT = "ACCEPT", "Accepted"
         DECLINE = "DECLINE", "Declined"
