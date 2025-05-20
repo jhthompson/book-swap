@@ -1,3 +1,15 @@
 .book-card {
     max-width: 200px;
 }
+
+.navbar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--s0);
+    flex-wrap: wrap;
+
+    li:last-of-type {
+        margin-inline-start: auto;
+    }
+}
