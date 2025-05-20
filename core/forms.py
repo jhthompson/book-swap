@@ -50,6 +50,10 @@ class BookListingSelectionForm(forms.Form):
 class AcceptSwapForm(forms.Form):
     message = forms.CharField(
         label="How should they contact you to coordinate the swap?",
-        widget=forms.Textarea,
+        widget=forms.Textarea(
+            attrs={
+                "class": "width:100",
+            }
+        ),
         help_text="Email, text message, WhatsApp, etc.",
     )

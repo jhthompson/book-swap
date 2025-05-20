@@ -6,7 +6,7 @@
 <p class="center text-align:center">Status: {{ swap.get_status_display }}</p>
 
 <div class="stack center">
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
             <h2>{{ swap.proposed_by.username }}'s books</h2>
             <ul>
@@ -15,6 +15,8 @@
                 {% endfor %}
             </ul>
         </div>
+
+        <i class="bi bi-arrow-left-right font-size:s1"></i>
 
         <div>
             <h2>{{ swap.proposed_to.username }}'s books</h2>
@@ -41,10 +43,10 @@
     {% if swap.status == 'PROPOSED' %}
     <div class="text-align:end">
         {% if swap.proposed_by == request.user %}
-            <a href="{% url 'cancel_swap' swap.id %}">Cancel Swap</a>
+            <a href="{% url 'cancel_swap' swap.id %}">Cancel</a>
         {% else %}
-            <a href="{% url 'accept_swap' swap.id %}">Accept Swap</a>
-            <a href="{% url 'decline_swap' swap.id %}">Decline Swap</a>
+            <a href="{% url 'accept_swap' swap.id %}">Accept</a>
+            <a href="{% url 'decline_swap' swap.id %}">Decline</a>
         {% endif %}
     </div>
     {% elif swap.status == 'CANCELLED' %}

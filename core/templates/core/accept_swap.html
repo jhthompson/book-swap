@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<form method="post">
+<form class="center stack" method="post">
     {% csrf_token %}
     <table>
         {{ form }}

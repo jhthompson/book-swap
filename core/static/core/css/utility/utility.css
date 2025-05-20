@@ -92,3 +92,11 @@
 .margin-block-start\:s0 {
     margin-block-start: var(--s0);
 }
+
+.width\:100 {
+    width: 100%;
+}
+
+.font-size\:s1 {
+    font-size: var(--s1);
+}
