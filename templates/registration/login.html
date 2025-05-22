@@ -1,8 +1,8 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h2 class="center text-align:center">Log In</h2>
-<form class="center stack text-align:center" method="post">
+<h2 class="center">Log In</h2>
+<form class="center stack" method="post">
   {% csrf_token %}
   {{ form }}
   <button type="submit">Log In</button>
