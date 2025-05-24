@@ -4,15 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0013_alter_bookswap_status'),
+        ("core", "0013_alter_bookswap_status"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='bookswapevent',
-            name='type',
-            field=models.CharField(choices=[('PROPOSE', 'Proposed'), ('CANCEL', 'Cancelled'), ('ACCEPT', 'Accepted'), ('DECLINE', 'Declined')], max_length=7),
+            model_name="bookswapevent",
+            name="type",
+            field=models.CharField(
+                choices=[
+                    ("PROPOSE", "Proposed"),
+                    ("CANCEL", "Cancelled"),
+                    ("ACCEPT", "Accepted"),
+                    ("DECLINE", "Declined"),
+                ],
+                max_length=7,
+            ),
         ),
     ]

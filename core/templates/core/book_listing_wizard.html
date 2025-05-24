@@ -1,0 +1,31 @@
+{% extends "core/base.html" %}
+{% load i18n %}
+
+{% block head %}
+{{ wizard.form.media }}
+{% endblock head %}
+
+{% block main %}
+<p class="center">Step {{ wizard.steps.step1 }} of {{ wizard.steps.count }}</p>
+<form class="center stack" method="post" enctype="multipart/form-data">
+{% csrf_token %}
+<table>
+{{ wizard.management_form }}
+{% if wizard.form.forms %}
+    {{ wizard.form.management_form }}
+    {% for form in wizard.form.forms %}
+        {{ form.as_table }}
+    {% endfor %}
+{% else %}
+    {{ wizard.form }}
+{% endif %}
+</table>
+<div style="display: flex; flex-direction: row-reverse; gap: var(--s0); justify-content: flex-end;">
+    <input type="submit" value="Next"/>
+    {% if wizard.steps.prev %}
+    {% comment %} <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>First</button> {% endcomment %}
+    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate>Previous</button>
+    {% endif %}
+</div>
+</form>
+{% endblock main %}

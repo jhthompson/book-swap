@@ -9,6 +9,7 @@ from isbn_field import ISBNField
 class BookListing(models.Model):
     # user provided
     title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
     cover_photo = models.FileField(upload_to="book_listing_covers/")
     isbn = ISBNField(blank=True)
 

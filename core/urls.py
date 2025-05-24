@@ -5,7 +5,11 @@ from core import views
 urlpatterns = [
     # listings
     path("listings", views.listings, name="listings"),
-    path("listings/new", views.new_listing, name="new_listing"),
+    path(
+        "listings/new",
+        views.BookListingWizardView.as_view(),
+        name="new_listing",
+    ),
     path("listings/<int:id>", views.listing, name="listing"),
     path("listings/<int:id>/edit", views.edit_listing, name="edit_listing"),
     # swaps
