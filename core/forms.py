@@ -6,15 +6,17 @@ from core.models import BookListing
 
 
 class BookListingISBNForm(forms.Form):
-    isbn = forms.CharField(required=False, min_length=10, validators=[ISBNValidator])
+    isbn = forms.CharField(
+        required=False,
+        label="ISBN",
+        min_length=10,
+        validators=[ISBNValidator],
+    )
 
 
 class BookListingDetailsForm(forms.Form):
     title = forms.CharField(max_length=255)
     author = forms.CharField(max_length=255)
-
-
-class BookListingCoverPhotoForm(forms.Form):
     cover_photo = forms.ImageField(
         widget=forms.ClearableFileInput(
             attrs={"capture": "environment", "accept": "image/*"}

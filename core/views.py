@@ -14,7 +14,6 @@ from formtools.wizard.views import SessionWizardView
 
 from core.forms import (
     AcceptSwapForm,
-    BookListingCoverPhotoForm,
     BookListingDetailsForm,
     BookListingForm,
     BookListingSelectionForm,
@@ -84,7 +83,6 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
     form_list = [
         ("isbn", BookListingISBNForm),
         ("details", BookListingDetailsForm),
-        ("cover_photo", BookListingCoverPhotoForm),
     ]
 
     file_storage = FileSystemStorage(
@@ -156,14 +154,13 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
         # Combine data from both steps
         isbn_data = form_list[0].cleaned_data
         details_data = form_list[1].cleaned_data
-        cover_photo_data = form_list[2].cleaned_data
 
         # Create your book listing object here
         listing = BookListing.objects.create(
             isbn=isbn_data["isbn"],
             title=details_data["title"],
             author=details_data["author"],
-            cover_photo=cover_photo_data["cover_photo"],
+            cover_photo=details_data["cover_photo"],
             owner=self.request.user,
         )
 

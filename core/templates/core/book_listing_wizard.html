@@ -21,7 +21,7 @@
 {% endif %}
 </table>
 <div style="display: flex; flex-direction: row-reverse; gap: var(--s0); justify-content: flex-end;">
-    <input type="submit" value="Next"/>
+    <input type="submit" value="Submit"/>
     {% if wizard.steps.prev %}
     {% comment %} <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.first }}" formnovalidate>First</button> {% endcomment %}
     <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" formnovalidate>Previous</button>
