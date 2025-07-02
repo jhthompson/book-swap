@@ -1,24 +1,25 @@
 import os
+
+from formtools.wizard.views import SessionWizardView
+
 from django import forms
 from django.conf import settings
-from django.http import HttpRequest
-from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
-
-from formtools.wizard.views import SessionWizardView
+from django.http import HttpRequest
+from django.shortcuts import redirect, render
 
 from core.forms import (
     AcceptSwapForm,
     BookListingDetailsForm,
     BookListingForm,
+    BookListingISBNForm,
     BookListingSelectionForm,
     BookListingSelectionFormSet,
-    BookListingISBNForm,
 )
 from core.models import BookListing, BookSwap, BookSwapEvent
 
@@ -101,7 +102,7 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
                 self.storage.extra_data["api_lookup_success"] = True
                 messages.success(
                     self.request,
-                    "Found book details from ISBN - please double check they are correct.",
+                    "Found book details from ISBN - please double check they are correct.",  # noqa: E501
                 )
             else:
                 self.storage.extra_data["api_lookup_success"] = False
@@ -130,8 +131,8 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
             return None
 
         try:
-            import urllib.request
             import json
+            import urllib.request
 
             url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
             with urllib.request.urlopen(url) as response:
@@ -144,7 +145,7 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
                     "author": ", ".join(book.get("authors", [])),
                     # ... extract other fields if needed
                 }
-        except Exception as e:
+        except Exception:
             # Log the error
             pass
         return None

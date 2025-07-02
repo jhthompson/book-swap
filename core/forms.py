@@ -1,6 +1,6 @@
-from django import forms
-
 from isbn_field.validators import ISBNValidator
+
+from django import forms
 
 from core.models import BookListing
 
@@ -38,13 +38,11 @@ class BookListingForm(forms.ModelForm):
 class BookListingSelectionFormSet(forms.BaseFormSet):
     def __init__(self, *args, **kwargs):
         owners = kwargs.pop("owners", [])
-        super(BookListingSelectionFormSet, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.owners = owners
 
     def get_form_kwargs(self, form_index):
-        form_kwargs = super(BookListingSelectionFormSet, self).get_form_kwargs(
-            form_index
-        )
+        form_kwargs = super().get_form_kwargs(form_index)
         if form_index < len(self.owners):
             form_kwargs["owner"] = self.owners[form_index]
         return form_kwargs

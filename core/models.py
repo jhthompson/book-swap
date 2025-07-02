@@ -1,9 +1,9 @@
-from django.db import models
+from isbn_field import ISBNField
+
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-
+from django.db import models
 from django.forms import ValidationError
-from isbn_field import ISBNField
 
 
 class BookListing(models.Model):
@@ -48,7 +48,7 @@ class BookSwap(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.proposed_by} proposed a swap to {self.proposed_to} on {self.created_at}"
+        return f"{self.proposed_by} proposed a swap to {self.proposed_to} on {self.created_at}"  # noqa: E501
 
     def accept(self, user: User, message: str = None):
         if user != self.proposed_to:
