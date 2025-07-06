@@ -78,6 +78,27 @@ def edit_listing(request, id):
     return render(request, "core/edit_listing.html", {"form": form})
 
 
+@login_required
+def delete_listing(request, id):
+    try:
+        listing = BookListing.objects.get(id=id, owner=request.user)
+    except BookListing.DoesNotExist:
+        return redirect("listings")
+
+    if request.method == "POST":
+        listing.delete()
+        messages.success(request, "Listing deleted successfully.")
+        return redirect("listings")
+
+    form = forms.Form()  # Empty form for CSRF token
+
+    return render(
+        request,
+        "core/delete_listing.html",
+        {"listing": listing, "form": form},
+    )
+
+
 class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
     template_name = "core/book_listing_wizard.html"
 
