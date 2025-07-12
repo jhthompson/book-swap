@@ -19,6 +19,7 @@ dependencies = [
     { name = "django" },
     { name = "django-formtools" },
     { name = "django-isbn-field" },
+    { name = "django-registration" },
     { name = "pillow" },
 ]
 
@@ -33,6 +34,7 @@ requires-dist = [
     { name = "django", specifier = ">=5.2" },
     { name = "django-formtools", specifier = ">=2.5.1" },
     { name = "django-isbn-field", specifier = ">=0.5.3" },
+    { name = "django-registration", specifier = ">=5.2.1" },
     { name = "pillow", specifier = ">=11.2.1" },
 ]
 
@@ -40,6 +42,15 @@ requires-dist = [
 dev = [
     { name = "djade", specifier = ">=1.4.0" },
     { name = "ruff", specifier = ">=0.11.7" },
+]
+
+[[package]]
+name = "confusable-homoglyphs"
+version = "3.3.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0d/10/1358fca1ee2d97d4f2877df9ffbe6d124da666fef3b2f75e771a4c1afee6/confusable_homoglyphs-3.3.1.tar.gz", hash = "sha256:b995001c9b2e1b4cea0cf5f3840a7c79188a8cbbad053d693572bd8c1c1ec460", size = 325480, upload_time = "2024-01-30T10:10:27.47Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c5/6e/c0fcbb7d341a46cf4241a6aa9e6a737734f0657521fc1bcd074953fe4eea/confusable_homoglyphs-3.3.1-py2.py3-none-any.whl", hash = "sha256:84c92cb79dc7f55aa290d0762b2349abd8dee4c16fbe6f99eac978d394e2e6a1", size = 144755, upload_time = "2024-01-30T10:10:24.857Z" },
 ]
 
 [[package]]
@@ -97,6 +108,19 @@ dependencies = [
     { name = "six" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e1/30/17416fd29134deba92fe4eb0e266dc05e852f1fcf8370086ce464e47dff3/django-isbn-field-0.5.3.tar.gz", hash = "sha256:a6c4d4de37a2025b7f8522f854a1be69abe8e50b049129eec9cb7091c1a4d1a8", size = 6942, upload_time = "2021-12-07T22:38:35.481Z" }
+
+[[package]]
+name = "django-registration"
+version = "5.2.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "confusable-homoglyphs" },
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9a/a0/f6e6d0a59b94eb4ab14983853334cb25401d677c5a3799aaca6819acf2eb/django_registration-5.2.1.tar.gz", hash = "sha256:06864f9da0bc4d7b073fb2da98d95d12428357ab0bc46e33f79c26707ec06bbe", size = 94187, upload_time = "2025-04-07T05:54:48.558Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/78/5d/aa2f82b3c809db66eb986963db1d4b89de190b4eac2e3021a725112e3b13/django_registration-5.2.1-py3-none-any.whl", hash = "sha256:7079e2364b15fc6bef18b81ae94c5e947b556abdbbfb19c9bcca14feafde6a3d", size = 105277, upload_time = "2025-04-07T05:54:46.981Z" },
+]
 
 [[package]]
 name = "pillow"
