@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
+from django.core.paginator import Paginator
 from django.http import HttpRequest
 from django.shortcuts import redirect, render
 
@@ -351,3 +352,26 @@ def decline_swap(request: HttpRequest, id: int):
         return redirect("index")
 
     return render(request, "core/decline_swap.html", context={"swap": swap})
+
+
+def search(request: HttpRequest):
+    query = request.GET.get("query", "")
+    context = {"query": query}
+
+    queryset = BookListing.objects.all()
+
+    if query:
+        queryset = queryset.filter(title__icontains=query)
+
+    if request.user.is_authenticated:
+        queryset = queryset.exclude(owner=request.user)
+
+    queryset = queryset.order_by("-created_at")
+
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context["page_obj"] = page_obj
+
+    return render(request, "core/search.html", context)

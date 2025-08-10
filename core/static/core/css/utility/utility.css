@@ -11,10 +11,6 @@
     border: var(--border-thin, 1px) solid;
 }
 
-.box * {
-    color: inherit;
-}
-
 .center {
     margin-inline: auto;
     max-inline-size: var(--measure, 40rem);
@@ -87,12 +83,24 @@
     margin-inline-start: var(--s-2);
 }
 
+.margin-inline-end\:s-2 {
+    margin-inline-end: var(--s-2);
+}
+
 .margin-inline-end\:s-3 {
     margin-inline-end: var(--s-3);
 }
 
+.margin-inline-end\:s-4 {
+    margin-inline-end: var(--s-4);
+}
+
 .color-primary {
     color: var(--primary);
+}
+
+.color-muted {
+    color: var(--muted);
 }
 
 .margin-block-start\:s0 {

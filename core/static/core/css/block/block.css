@@ -57,6 +57,33 @@
 }
 
 .helptext {
-    font-size: var(--s-1);
-    color: #6c757d;
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.button {
+    display: block;
+    width: fit-content;
+    text-align: center;
+    padding: 12px 24px;
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 6px 6px 0 var(--primary);
+    font-size: 14px;
+    letter-spacing: 1px;
+    transition: all 0.1s ease;
+
+    &:hover {
+        transform: translate(3px, 3px);
+        box-shadow: 3px 3px 0 var(--primary);
+        ;
+    }
+
+    &:active {
+        transform: translate(6px, 6px);
+        box-shadow: none;
+    }
 }

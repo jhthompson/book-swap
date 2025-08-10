@@ -5,8 +5,8 @@
     <h1 class="center text-align:center color-primary">Find Your Next Read, Share Your Favorites</h1>
     <p class="center text-align:center">Join our community of readers and exchange books with people nearby.</p>
 
-    <form class="center text-align:center" action="{% url 'index' %}" method="get">
-        <input type="text" name="search" placeholder="Search for books by title, author, or genre...">
+    <form class="center text-align:center" action="{% url 'search' %}" method="get">
+        <input type="text" name="query" placeholder="Search for books by title, author, or genre...">
         <button>
             <i class="bi bi-search"></i>
         </button>
@@ -20,13 +20,11 @@
                     <article class="book-card box stack">
                         <img src="{{ listing.cover_photo.url }}" style="max-width: 100px"/>
                         <div class="margin-block-start:s-2">
-                            <p>
-                                <i class="bi bi-geo-alt margin-inline-end:s-3"></i>{{ listing.get_city }}
-                            </p>
+                            <p><i class="bi bi-geo-alt margin-inline-end:s-3"></i>{{ listing.get_city }}</p>
                             <h3 class="margin:0">{{ listing.title }}</h3>
                             <p class="margin:0">{{ listing.author }}</p>
-                            <a class="color-primary" href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">
-                                <i class="bi bi-arrow-left-right margin-inline-end:s-3"></i>Swap
+                            <a class="button margin-block-start:s-2 width:100" href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">
+                                <i class="bi bi-arrow-left-right margin-inline-end:s-2"></i>Swap
                             </a>
                         </div>
 

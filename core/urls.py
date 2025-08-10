@@ -20,6 +20,8 @@ urlpatterns = [
     path("swaps/<int:id>/cancel", views.cancel_swap, name="cancel_swap"),
     path("swaps/<int:id>/accept", views.accept_swap, name="accept_swap"),
     path("swaps/<int:id>/decline", views.decline_swap, name="decline_swap"),
+    # search
+    path("search", views.search, name="search"),
     # index
     path("", views.index, name="index"),
 ]
