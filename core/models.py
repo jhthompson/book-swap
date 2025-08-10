@@ -23,12 +23,15 @@ class BookListing(models.Model):
     cover_photo = models.FileField(upload_to="book_listing_covers/")
     isbn = ISBNField(blank=True)
 
-    # system populated/generated
+    # system generated
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+    def get_city(self):
+        return self.owner.userprofile.city
 
 
 class BookSwap(models.Model):

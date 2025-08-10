@@ -67,6 +67,10 @@
     padding: 0;
 }
 
+.margin\:0 {
+    margin: 0;
+}
+
 .text-align\:center {
     text-align: center;
 }
@@ -75,8 +79,16 @@
     text-align: end;
 }
 
+.margin-block-start\:s-2 {
+    margin-block-start: var(--s-2);
+}
+
 .margin-inline-start\:s-2 {
     margin-inline-start: var(--s-2);
+}
+
+.margin-inline-end\:s-3 {
+    margin-inline-end: var(--s-3);
 }
 
 .color-primary {
