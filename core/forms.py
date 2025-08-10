@@ -31,6 +31,7 @@ class BookListingISBNForm(forms.Form):
     isbn = forms.CharField(
         required=False,
         label="ISBN",
+        help_text="An International Standard Book Number (ISBN) is a 10 or 13-digit number that uniquely identifies books. If you don't know the ISBN, you can leave this blank.",  # noqa: E501
         min_length=10,
         validators=[ISBNValidator],
     )
