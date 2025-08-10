@@ -55,3 +55,8 @@
         border-color: #ebccd1;
     }
 }
+
+.helptext {
+    font-size: var(--s-1);
+    color: #6c757d;
+}

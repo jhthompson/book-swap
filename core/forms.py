@@ -1,8 +1,30 @@
 from isbn_field.validators import ISBNValidator
+from location_field.forms.spatial import LocationField
 
 from django import forms
+from django.contrib.gis.geos import Point
 
-from core.models import BookListing
+from core.models import BookListing, UserProfile
+
+
+class BookSwapSignupForm(forms.Form):
+    city = forms.CharField()
+    location = LocationField(
+        based_fields=["city"],
+        initial=Point(
+            -75.6901106,
+            45.4208777,
+        ),
+        help_text="Select the general area where you want to swap books. ",
+    )
+
+    def signup(self, request, user):
+        profile = UserProfile.objects.create(
+            user=user,
+            city=self.cleaned_data["city"],
+            location=self.cleaned_data["location"],
+        )
+        profile.save()
 
 
 class BookListingISBNForm(forms.Form):

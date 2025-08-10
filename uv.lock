@@ -20,7 +20,9 @@ dependencies = [
     { name = "django-allauth" },
     { name = "django-formtools" },
     { name = "django-isbn-field" },
+    { name = "django-location-field" },
     { name = "pillow" },
+    { name = "psycopg" },
 ]
 
 [package.dev-dependencies]
@@ -35,7 +37,9 @@ requires-dist = [
     { name = "django-allauth", specifier = ">=65.10.0" },
     { name = "django-formtools", specifier = ">=2.5.1" },
     { name = "django-isbn-field", specifier = ">=0.5.3" },
+    { name = "django-location-field", specifier = ">=2.7.3" },
     { name = "pillow", specifier = ">=11.2.1" },
+    { name = "psycopg", specifier = ">=3.2.9" },
 ]
 
 [package.metadata.requires-dev]
@@ -111,6 +115,14 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e1/30/17416fd29134deba92fe4eb0e266dc05e852f1fcf8370086ce464e47dff3/django-isbn-field-0.5.3.tar.gz", hash = "sha256:a6c4d4de37a2025b7f8522f854a1be69abe8e50b049129eec9cb7091c1a4d1a8", size = 6942, upload_time = "2021-12-07T22:38:35.481Z" }
 
 [[package]]
+name = "django-location-field"
+version = "2.7.3"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cd/c3/37c545104c47d97331392a81f3765a2820cf69a0e3b362b2f4fdf250adc1/django_location_field-2.7.3-py2.py3-none-any.whl", hash = "sha256:b0660d3fd024541fbe53ef723e3b02ec4014fbc886ee3d8342e031f1ab28d11d", size = 920952, upload_time = "2023-11-21T14:20:59.132Z" },
+]
+
+[[package]]
 name = "pillow"
 version = "11.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -138,6 +150,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/b3/92/1ca0c3f09233bd7decf8f7105a1c4e3162fb9142128c74adad0fb361b7eb/pillow-11.2.1-cp313-cp313t-win32.whl", hash = "sha256:e0b55f27f584ed623221cfe995c912c61606be8513bfa0e07d2c674b4516d9dd", size = 2335774, upload_time = "2025-04-12T17:49:04.889Z" },
     { url = "https://files.pythonhosted.org/packages/a5/ac/77525347cb43b83ae905ffe257bbe2cc6fd23acb9796639a1f56aa59d191/pillow-11.2.1-cp313-cp313t-win_amd64.whl", hash = "sha256:36d6b82164c39ce5482f649b437382c0fb2395eabc1e2b1702a6deb8ad647d6e", size = 2681895, upload_time = "2025-04-12T17:49:06.635Z" },
     { url = "https://files.pythonhosted.org/packages/67/32/32dc030cfa91ca0fc52baebbba2e009bb001122a1daa8b6a79ad830b38d3/pillow-11.2.1-cp313-cp313t-win_arm64.whl", hash = "sha256:225c832a13326e34f212d2072982bb1adb210e0cc0b153e688743018c94a2681", size = 2417234, upload_time = "2025-04-12T17:49:08.399Z" },
+]
+
+[[package]]
+name = "psycopg"
+version = "3.2.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tzdata", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/27/4a/93a6ab570a8d1a4ad171a1f4256e205ce48d828781312c0bbaff36380ecb/psycopg-3.2.9.tar.gz", hash = "sha256:2fbb46fcd17bc81f993f28c47f1ebea38d66ae97cc2dbc3cad73b37cefbff700", size = 158122, upload_time = "2025-05-13T16:11:15.533Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/44/b0/a73c195a56eb6b92e937a5ca58521a5c3346fb233345adc80fd3e2f542e2/psycopg-3.2.9-py3-none-any.whl", hash = "sha256:01a8dadccdaac2123c916208c96e06631641c0566b22005493f09663c7a8d3b6", size = 202705, upload_time = "2025-05-13T16:06:26.584Z" },
 ]
 
 [[package]]

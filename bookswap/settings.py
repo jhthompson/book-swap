@@ -38,10 +38,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.gis",
     # Third-party
     "isbn_field",
     "allauth",
     "allauth.account",
+    "location_field.apps.DefaultConfig",
     # Local
     "core.apps.CoreConfig",
 ]
@@ -82,9 +84,11 @@ WSGI_APPLICATION = "bookswap.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "bookswap",
+        "USER": "bookswap",
+        "PASSWORD": "password",
+    },
 }
 
 
@@ -153,5 +157,14 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_SIGNUP_FORM_CLASS = "core.forms.BookSwapSignupForm"
 ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
 ACCOUNT_LOGIN_METHODS = {"email", "username"}
+
+# django-location-field
+
+LOCATION_FIELD = {
+    "map.provider": "openstreetmap",
+    "search.provider": "nominatim",
+    "provider.openstreetmap.max_zoom": 2,
+}
