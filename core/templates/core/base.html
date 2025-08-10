@@ -23,12 +23,12 @@
                 <li><a href="{% url 'swaps' %}">Your Swaps</a></li>
                 <li>
                     {% if user.is_authenticated %}  
-                        <form action="{% url 'logout' %}" method="post">
+                        <form action="{% url 'account_logout' %}" method="post">
                             {% csrf_token %}
                             <button type="submit">Log Out</button>
                         </form>
                     {% else %}
-                        <a href="{% url 'login' %}">Log In</a>
+                        <a href="{% url 'account_login' %}">Log In</a>
                     {% endif %}
                 </li>
             </ol>
@@ -36,8 +36,8 @@
     </header>
 
     {% if messages %}
-        <section>
-            <ul class="messages">
+        <section class="margin-block-end:s0">
+            <ul class="messages center list-style:none padding:0">
                 {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
                 {% endfor %}

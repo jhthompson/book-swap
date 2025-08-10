@@ -13,3 +13,45 @@
         margin-inline-start: auto;
     }
 }
+
+.messages {
+    &>li {
+        padding: var(--s0);
+        border: 1px solid transparent;
+        margin-block: 0;
+    }
+
+    &>li+li {
+        margin-block-start: var(--s-1);
+    }
+
+    & .debug {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+    }
+
+    & .info {
+        color: #31708f;
+        background-color: #d9edf7;
+        border-color: #bce8f1;
+    }
+
+    & .success {
+        color: #3c763d;
+        background-color: #dff0d8;
+        border-color: #d6e9c6;
+    }
+
+    & .warning {
+        color: #8a6d3b;
+        background-color: #fcf8e3;
+        border-color: #faebcc;
+    }
+
+    & .error {
+        color: #a94442;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+    }
+}
