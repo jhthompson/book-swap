@@ -361,7 +361,9 @@ def search(request: HttpRequest):
     queryset = BookListing.objects.all()
 
     if query:
-        queryset = queryset.filter(title__icontains=query)
+        queryset = queryset.filter(title__icontains=query) | queryset.filter(
+            author__icontains=query
+        )
 
     if request.user.is_authenticated:
         queryset = queryset.exclude(owner=request.user)

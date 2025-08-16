@@ -5,8 +5,8 @@
     <h1 class="center text-align:center color-primary">Find Your Next Read, Share Your Favorites</h1>
     <p class="center text-align:center">Join our community of readers and exchange books with people nearby.</p>
 
-    <form class="center text-align:center" action="{% url 'search' %}" method="get">
-        <input type="text" name="query" placeholder="Search for books by title, author, or genre...">
+    <form class="center text-align:center display:flex" action="{% url 'search' %}" method="get">
+        <input class="flex:1" type="text" name="query" placeholder="Search for books by title or author...">
         <button>
             <i class="bi bi-search"></i>
         </button>

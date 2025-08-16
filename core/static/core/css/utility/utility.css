@@ -118,3 +118,11 @@
 .font-size\:s1 {
     font-size: var(--s1);
 }
+
+.display\:flex {
+    display: flex;
+}
+
+.flex\:1 {
+    flex: 1;
+}
