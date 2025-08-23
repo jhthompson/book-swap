@@ -36,7 +36,7 @@
     </header>
 
     {% if messages %}
-        <section class="margin-block-end:s0">
+        <section class="margin-block-start:s0 margin-block-end:s0">
             <ul class="messages center list-style:none padding:0">
                 {% for message in messages %}
                 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
