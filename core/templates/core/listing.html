@@ -4,10 +4,10 @@
 <div class="stack center">
     <h1 class="text-align:center color-primary">{{ listing.title }}</h1>
     <p class="text-align:center">Added {{ listing.created_at|timesince }} ago</p>
-    <p class="text-align:center">
-        <a href="{% url 'edit_listing' listing.id %}">Edit Listing</a>
-        <a href="{% url 'delete_listing' listing.id %}">Delete Listing</a>
-    </p>
+    <div class="display:flex justify-content:center gap:s0">
+        <a class="button" href="{% url 'edit_listing' listing.id %}">Edit Listing</a>
+        <a class="button" href="{% url 'delete_listing' listing.id %}">Delete Listing</a>
+    </div>
     <img class="center" src="{{ listing.cover_photo.url }}" alt="Cover of {{ listing.title }}" style="max-width: 300px;">
 </div>
 {% endblock main %}

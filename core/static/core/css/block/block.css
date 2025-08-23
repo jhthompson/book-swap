@@ -76,10 +76,13 @@
     letter-spacing: 1px;
     transition: all 0.1s ease;
 
+    &:visited {
+        color: #fff;
+    }
+
     &:hover {
         transform: translate(3px, 3px);
         box-shadow: 3px 3px 0 var(--primary);
-        ;
     }
 
     &:active {

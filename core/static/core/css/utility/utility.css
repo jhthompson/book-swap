@@ -151,6 +151,10 @@
     justify-content: flex-end;
 }
 
+.justify-content\:center {
+    justify-content: center;
+}
+
 .gap\:s0 {
     gap: var(--s0);
 }

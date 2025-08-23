@@ -23,3 +23,17 @@
 body {
     padding: var(--s0);
 }
+
+a {
+    color: black;
+    transition: all 0.2s ease;
+    text-underline-offset: 4px;
+}
+
+a:visited {
+    color: black;
+}
+
+a:hover {
+    color: var(--primary);
+}
