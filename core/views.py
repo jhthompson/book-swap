@@ -191,23 +191,6 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
 
 
 @login_required
-def new_listing(request):
-    if request.method == "POST":
-        form = BookListingForm(request.POST, request.FILES)
-
-        if form.is_valid():
-            listing: BookListing = form.save(commit=False)
-            listing.owner = request.user
-            listing.save()
-            return redirect("listings")
-
-    else:
-        form = BookListingForm()
-
-    return render(request, "core/new_listing.html", {"form": form})
-
-
-@login_required
 def swaps(request):
     context = {}
 
