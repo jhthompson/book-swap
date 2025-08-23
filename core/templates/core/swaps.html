@@ -3,58 +3,53 @@
 {% block main %}
 <h1 class="center text-align:center color-primary">Swaps</h1>
 
-<h2 class="center text-align:center color-primary">Proposed by you</h2>
-<ul class="center">
-    {% for swap in swaps_by_you %}
-        <li>
-            <h2>
-                <a href="{% url 'swap' swap.id %}">Proposed Swap with {{ swap.proposed_to.username }}</a>
-            </h2>
-            <p>Created {{ swap.created_at|timesince }} ago</p>
-            <h3>{{ swap.proposed_to.username }}'s books</h3>
-            <ul>
-                {% for book in swap.requested_books.all %}
-                    <li>{{ book.title }}</li>
-                {% endfor %}
-            </ul>
+<div class="stack">
+    <div>
+        <h2 class="center color-primary">Created</h2>
+        <ul class="center stack padding:0" style="--space: 1rem">
+            {% for swap in swaps_by_you %}
+                <li class="box list-style:none">
+                    <a href="{% url 'swap' swap.id %}">
+                        {% for book in swap.offered_books.all %}
+                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
 
-            <h3>Your Books</h3>
-            <ul>
-                {% for book in swap.offered_books.all %}
-                    <li>{{ book.title }}</li>
-                {% endfor %}
-            </ul>
+                        <i class="bi bi-arrow-left-right"></i>
+                        {% for book in swap.requested_books.all %}
+                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </a>
 
-        </li>
-    {% empty %}
-        <li>No swaps proposed by you.</li>
-    {% endfor %}
-</ul>
+                    <small class="display:block">{{ swap.created_at|timesince }} ago</small>
+                </li>
+            {% empty %}
+                <li>No swaps proposed by you.</li>
+            {% endfor %}
+        </ul>
+    </div>
 
-<h2 class="center text-align:center color-primary">Proposed to you</h2>
-<ul class="center">
-    {% for swap in swaps_to_you %}
-        <li>
-            <h2>
-                <a href="{% url 'swap' swap.id %}">Swap proposed by {{ swap.proposed_by.username }}</a>
-            </h2>
-            <p>Created {{ swap.created_at|timesince }} ago</p>
-            <h3>{{ swap.proposed_by.username }}'s books</h3>
-            <ul>
-                {% for book in swap.requested_books.all %}
-                    <li>{{ book.title }}</li>
-                {% endfor %}
-            </ul>
+    <div>
+        <h2 class="center color-primary">Received</h2>
+        <ul class="center stack padding:0" style="--space: 1rem">
+            {% for swap in swaps_to_you %}
+                <li class="box list-style:none">
+                    <a href="{% url 'swap' swap.id %}">
+                        {% for book in swap.requested_books.all %}
+                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
 
-            <h3>Your Books</h3>
-            <ul>
-                {% for book in swap.offered_books.all %}
-                    <li>{{ book.title }}</li>
-                {% endfor %}
-            </ul>
+                        <i class="bi bi-arrow-left-right"></i>
+                        {% for book in swap.offered_books.all %}
+                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </a>
 
-        </li>
-    {% empty %}
-        <li>No swaps proposed to you.</li>
-    {% endfor %}
+                    <small class="display:block">{{ swap.created_at|timesince }} ago</small>
+                </li>
+            {% empty %}
+                <li>No swaps proposed to you.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock main %}

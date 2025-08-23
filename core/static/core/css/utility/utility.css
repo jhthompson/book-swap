@@ -111,6 +111,10 @@
     color: var(--muted);
 }
 
+.margin-block\:s0 {
+    margin-block: var(--s0);
+}
+
 .margin-block-start\:s0 {
     margin-block-start: var(--s0);
 }
@@ -125,6 +129,10 @@
 
 .font-size\:s1 {
     font-size: var(--s1);
+}
+
+.display\:block {
+    display: block;
 }
 
 .display\:flex {
