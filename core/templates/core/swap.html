@@ -30,17 +30,14 @@
 
     <ol class="stack list-style:none padding:0 display:flex flex-direction:column align-items:flex-start">
         {% for entry in swap.get_timeline %}
-            {% if entry.type == 'event' %}
-                <div class="{% if entry.item.user == request.user %}margin-inline-end:s0{% else %}margin-inline-start:s0 align-self:flex-end{% endif %}">
+            <div class="{% if entry.item.user == request.user %}margin-inline-end:s0{% else %}margin-inline-start:s0 align-self:flex-end{% endif %}">
+                {% if entry.type == 'event' %}
                     <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap</li>
-                    <small>{{ entry.item.created_at }}</small>
-                </div>
-            {% elif entry.type == 'message' %}
-                <div class=" {% if entry.item.user == request.user %}margin-inline-end:s0{% else %}margin-inline-start:s0 align-self:flex-end{% endif %}">
+                {% elif entry.type == 'message' %}
                     <li class="box">{{ entry.item.content }}</li>
-                    <small>{{ entry.item.created_at }}</small>
-                </div>
-            {% endif %}
+                {% endif %}
+                <small>{{ entry.item.created_at }}</small>
+            </div>
         {% endfor %}
     </ol>
 
