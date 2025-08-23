@@ -1,9 +1,12 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<div class="stack center">
+<div class="stack center" style="--space: 1rem;">
     <h1 class="text-align:center color-primary">{{ listing.title }}</h1>
-    <p class="text-align:center">Added {{ listing.created_at|timesince }} ago</p>
+    <div>
+        <p class="text-align:center">{{ listing.author }}</p>
+        <small class="display:block text-align:center">Added {{ listing.created_at|timesince }} ago</small>
+    </div>
     <div class="display:flex justify-content:center gap:s0">
         <a class="button" href="{% url 'edit_listing' listing.id %}">Edit Listing</a>
         <a class="button" href="{% url 'delete_listing' listing.id %}">Delete Listing</a>
