@@ -351,6 +351,16 @@ def decline_swap(request: HttpRequest, id: int):
     except BookSwap.DoesNotExist:
         return redirect("index")
 
+    if request.method == "POST":
+        form = forms.Form(request.POST)
+
+        if form.is_valid() and swap.decline(user=request.user):
+            messages.success(request, "Swap declined.")
+            return redirect("swaps")
+        else:
+            messages.error(request, "Something went wrong.")
+            return redirect("swap", swap.id)
+
     return render(request, "core/decline_swap.html", context={"swap": swap})
 
 

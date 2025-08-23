@@ -88,13 +88,20 @@ class BookSwap(models.Model):
 
         return False
 
-    def reject(self, user: User):
+    def decline(self, user: User):
         if user != self.proposed_to:
-            raise PermissionDenied("Only the receiver can reject this swap")
+            raise PermissionDenied("Only the receiver can decline this swap")
 
         if self.status == self.Status.PROPOSED:
             self.status = self.Status.DECLINED
             self.save()
+
+            BookSwapEvent.objects.create(
+                swap=self,
+                user=user,
+                type=BookSwapEvent.Type.DECLINE,
+            )
+
             return True
 
         return False
