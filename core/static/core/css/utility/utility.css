@@ -79,6 +79,14 @@
     margin-block-start: var(--s-2);
 }
 
+.margin-inline-start\:s0 {
+    margin-inline-start: var(--s0);
+}
+
+.margin-inline-end\:s0 {
+    margin-inline-end: var(--s0);
+}
+
 .margin-inline-start\:s-2 {
     margin-inline-start: var(--s-2);
 }
@@ -125,4 +133,24 @@
 
 .flex\:1 {
     flex: 1;
+}
+
+.flex-direction\:column {
+    flex-direction: column;
+}
+
+.align-items\:flex-start {
+    align-items: flex-start;
+}
+
+.align-self\:flex-end {
+    align-self: flex-end;
+}
+
+.justify-content\:flex-end {
+    justify-content: flex-end;
+}
+
+.gap\:s0 {
+    gap: var(--s0);
 }
