@@ -81,6 +81,7 @@
     }
 
     &:hover {
+        color: #fff;
         transform: translate(3px, 3px);
         box-shadow: 3px 3px 0 var(--primary);
     }
