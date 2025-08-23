@@ -7,10 +7,13 @@
     <li class="box list-style:none" style="display: flex; gap: var(--s0)">
         <img src="{{ listing.cover_photo.url }}" alt="Cover for {{ listing.title }}" style="width:100px;"></img>
         <div>
-            <a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
-            <p>
-                <strong>Created:</strong> {{ listing.created_at|date:"F j, Y" }}
-            </p>
+            <h2>
+                <a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
+            </h2>
+            <p>{{ listing.author }}</p>
+            <small class="display:block">
+                Listed on {{ listing.created_at|date:"F j, Y" }}
+            </small>
         </div>
     </li>
 {% endfor %}
