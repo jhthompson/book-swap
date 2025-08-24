@@ -1,0 +1,2 @@
+- [ ] Send email when someone proposes a swap with you
+- [ ] Page (map view?) to explore nearby books
