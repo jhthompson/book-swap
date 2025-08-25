@@ -2,8 +2,6 @@
 
 {% block main %}
 <h1 class="center text-align:center color-primary">{{swap.proposed_by.username}} wants to swap with {{ swap.proposed_to.username }}</h1>
-<p class="center text-align:center">Proposed on: {{ swap.created_at }}</p>
-<p class="center text-align:center">Status: {{ swap.get_status_display }}</p>
 
 <div class="stack center">
     <div style="display: flex; justify-content: space-between; align-items: center;">
