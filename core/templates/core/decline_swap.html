@@ -4,6 +4,8 @@
 <form class="center stack" method="post">
     {% csrf_token %}
     <p>Are you sure you want to decline {{ swap.proposed_by }}'s swap?</p>
-    <input class="button" type="submit" value="Confirm">
+    <div class="display:flex justify-content:flex-end">
+        <input class="button" type="submit" value="Confirm">
+    </div>
 </form>
 {% endblock main %}
