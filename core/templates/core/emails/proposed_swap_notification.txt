@@ -1,0 +1,11 @@
+{{ proposed_by.username }} proposed a book swap:
+                
+{{ proposed_by.username }}'s Books:
+{{ offered_books }}
+
+Your Books:
+{{ requested_books }}
+
+Accept or decline the swap here:
+
+{{ swap_url }}

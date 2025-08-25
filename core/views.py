@@ -246,6 +246,8 @@ def new_swap(request: HttpRequest):
                 type=BookSwapEvent.Type.PROPOSE,
             )
 
+            book_swap.notify(request, BookSwapEvent.Type.PROPOSE)
+
             return redirect("swap", book_swap.id)
     else:
         BookListingSelectionFormSetFactory = forms.formset_factory(

@@ -3,8 +3,12 @@ from isbn_field import ISBNField
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models as geo_models
 from django.core.exceptions import PermissionDenied
+from django.core.mail import send_mail
 from django.db import models
 from django.forms import ValidationError
+from django.http import HttpRequest
+from django.template.loader import render_to_string
+from django.urls import reverse
 
 
 class UserProfile(models.Model):
@@ -62,6 +66,42 @@ class BookSwap(models.Model):
 
     def __str__(self):
         return f"{self.proposed_by} proposed a swap to {self.proposed_to} on {self.created_at}"  # noqa: E501
+
+    def get_absolute_url(self):
+        return reverse("swap", kwargs={"id": self.pk})
+
+    def notify(self, request: HttpRequest, event_type: "BookSwapEvent.Type"):
+        match event_type:
+            case BookSwapEvent.Type.PROPOSE:
+                subject = f"{self.proposed_by.username} wants to swap books with you"
+                message = render_to_string(
+                    "core/emails/proposed_swap_notification.txt",
+                    {
+                        "proposed_by": self.proposed_by,
+                        "swap_url": request.build_absolute_uri(self.get_absolute_url()),
+                        "offered_books": ", ".join(
+                            [book.title for book in self.offered_books.all()]
+                        ),
+                        "requested_books": ", ".join(
+                            [book.title for book in self.requested_books.all()]
+                        ),
+                    },
+                )
+                recipient = self.proposed_to
+
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=None,
+                    recipient_list=[recipient.email],
+                )
+
+            case BookSwapEvent.Type.CANCEL:
+                pass
+            case BookSwapEvent.Type.ACCEPT:
+                pass
+            case BookSwapEvent.Type.DECLINE:
+                pass
 
     def accept(self, user: User, message: str = None):
         if user != self.proposed_to:
