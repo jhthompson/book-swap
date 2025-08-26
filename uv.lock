@@ -29,6 +29,7 @@ dependencies = [
 dev = [
     { name = "djade" },
     { name = "django-debug-toolbar" },
+    { name = "django-mail-panel" },
     { name = "ruff" },
 ]
 
@@ -47,6 +48,7 @@ requires-dist = [
 dev = [
     { name = "djade", specifier = ">=1.4.0" },
     { name = "django-debug-toolbar", specifier = ">=6.0.0" },
+    { name = "django-mail-panel", specifier = ">=4.0.4" },
     { name = "ruff", specifier = ">=0.11.7" },
 ]
 
@@ -135,6 +137,18 @@ version = "2.7.3"
 source = { registry = "https://pypi.org/simple" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/cd/c3/37c545104c47d97331392a81f3765a2820cf69a0e3b362b2f4fdf250adc1/django_location_field-2.7.3-py2.py3-none-any.whl", hash = "sha256:b0660d3fd024541fbe53ef723e3b02ec4014fbc886ee3d8342e031f1ab28d11d", size = 920952, upload_time = "2023-11-21T14:20:59.132Z" },
+]
+
+[[package]]
+name = "django-mail-panel"
+version = "4.0.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django-debug-toolbar" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/db/a2/7d33feae8e1ed1470c0c944a2974fd4d1a48503ec9d944e997d92a9096af/django_mail_panel-4.0.4.tar.gz", hash = "sha256:032c75a9588efe051a758404f2a68cf29b620e024d44cf40acd4a9b6639206fc", size = 15988, upload_time = "2024-05-09T15:51:19.166Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2b/ac/5ad026422748ec916a269111d7e7cdf9ab36c34711faacaf71ad13d569e0/django_mail_panel-4.0.4-py3-none-any.whl", hash = "sha256:440fe6c60bedc9bc4c4a2d9931ac9582d81f5d4c7e976eca7a48e8fc2d758a12", size = 17263, upload_time = "2024-05-09T15:51:17.888Z" },
 ]
 
 [[package]]

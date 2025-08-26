@@ -18,6 +18,7 @@ dependencies = [
 dev = [
     "djade>=1.4.0",
     "django-debug-toolbar>=6.0.0",
+    "django-mail-panel>=4.0.4",
     "ruff>=0.11.7",
 ]
 
