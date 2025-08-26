@@ -8,10 +8,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib.gis.geos import Polygon
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 
 from core.forms import (
@@ -376,3 +377,43 @@ def search(request: HttpRequest):
     context["page_obj"] = page_obj
 
     return render(request, "core/search.html", context)
+
+
+def map_view(request: HttpRequest):
+    return render(request, "core/map.html")
+
+
+def book_listings_api(request: HttpRequest):
+    try:
+        north = float(request.GET["north"])
+        south = float(request.GET["south"])
+        east = float(request.GET["east"])
+        west = float(request.GET["west"])
+    except (KeyError, ValueError):
+        return JsonResponse({"error": "Invalid bounds"}, status=400)
+
+    bbox = Polygon.from_bbox((west, south, east, north))
+    listings = BookListing.objects.filter(owner__userprofile__location__within=bbox)
+
+    if request.user.is_authenticated:
+        listings = listings.exclude(owner=request.user)
+
+    results = [
+        {
+            "id": b.id,
+            "title": b.title,
+            "author": b.author,
+            "cover": b.cover_photo.url if b.cover_photo else None,
+            "location": {
+                "lat": b.owner.userprofile.location.y,
+                "lng": b.owner.userprofile.location.x,
+            },
+            "owner": {
+                "id": b.owner.id,
+                "username": b.owner.username,
+            },
+        }
+        for b in listings.select_related("owner__userprofile")
+    ]
+
+    return JsonResponse({"results": results})

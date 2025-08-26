@@ -18,9 +18,12 @@
         <nav>
             <ol class="navbar list-style:none padding:0">
                 <li><a href="{% url 'index' %}">Home</a></li>
-                <li><a href="{% url 'listings' %}">Your Listings</a></li>
-                <li><a href="{% url 'new_listing' %}">New Listing</a></li>
-                <li><a href="{% url 'swaps' %}">Your Swaps</a></li>
+                <li><a href="{% url 'map' %}">Map</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'listings' %}">Your Listings</a></li>
+                    <li><a href="{% url 'new_listing' %}">New Listing</a></li>
+                    <li><a href="{% url 'swaps' %}">Your Swaps</a></li>
+                {% endif %}
                 <li>
                     {% if user.is_authenticated %}  
                         <form action="{% url 'account_logout' %}" method="post">

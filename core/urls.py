@@ -22,6 +22,9 @@ urlpatterns = [
     path("swaps/<int:id>/decline", views.decline_swap, name="decline_swap"),
     # search
     path("search", views.search, name="search"),
+    path("map", views.map_view, name="map"),
+    # API
+    path("api/book-listings/", views.book_listings_api, name="book_listings_api"),
     # index
     path("", views.index, name="index"),
 ]
