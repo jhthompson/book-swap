@@ -1,3 +1,4 @@
 - [x] Send email when someone proposes a swap with you
 - [x] Page (map view?) to explore nearby books
 - [ ] Send emails for more swap lifecycle events (accepted, declined)
+- [ ] Improve search (sort by distance? use Postgres text search instead of icontains?)
