@@ -28,6 +28,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "djade" },
+    { name = "django-debug-toolbar" },
     { name = "ruff" },
 ]
 
@@ -45,6 +46,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "djade", specifier = ">=1.4.0" },
+    { name = "django-debug-toolbar", specifier = ">=6.0.0" },
     { name = "ruff", specifier = ">=0.11.7" },
 ]
 
@@ -90,6 +92,19 @@ dependencies = [
     { name = "django" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/e1/9e/271e3b8ea27c089ddf3431140cf4aa86df86556ec102e360da5af62c3a99/django_allauth-65.10.0.tar.gz", hash = "sha256:47daa3b0e11a1d75724ea32995de37bd2b8963e9e4cce2b3a7fd64eb6d3b3c48", size = 1897777, upload_time = "2025-07-10T11:32:44.098Z" }
+
+[[package]]
+name = "django-debug-toolbar"
+version = "6.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "sqlparse" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c5/d5/5fc90234532088aeec5faa48d5b09951cc7eab6626030ed427d3bd8cd9bc/django_debug_toolbar-6.0.0.tar.gz", hash = "sha256:6eb9fa6f4a5884bf04004700ffb5a44043f1fff38784447fc52c1633448c8c14", size = 305331, upload_time = "2025-07-25T13:11:48.68Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/05/b5/4724a8c18fcc5b09dca7b7a0e70c34208317bb110075ad12484d6588ae91/django_debug_toolbar-6.0.0-py3-none-any.whl", hash = "sha256:0cf2cac5c307b77d6e143c914e5c6592df53ffe34642d93929e5ef095ae56841", size = 266967, upload_time = "2025-07-25T13:11:47.265Z" },
+]
 
 [[package]]
 name = "django-formtools"
