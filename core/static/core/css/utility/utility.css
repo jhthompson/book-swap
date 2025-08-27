@@ -107,7 +107,7 @@
     color: var(--primary);
 }
 
-.color-muted {
+.color\:muted {
     color: var(--muted);
 }
 
@@ -129,6 +129,10 @@
 
 .font-size\:s1 {
     font-size: var(--s1);
+}
+
+.font-style\:italic {
+    font-style: italic;
 }
 
 .display\:block {
