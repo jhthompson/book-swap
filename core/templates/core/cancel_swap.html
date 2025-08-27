@@ -1,11 +1,12 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<form method="post">
+<h1 class="center text-align:center color-primary">Cancel a Swap</h1>
+<form class="center stack" method="post">
     {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
-    <input type="submit" value="Confirm">
+    <p>Are you sure you want to cancel this swap?</p>
+    <div class="display:flex justify-content:flex-end">
+        <input class="button" type="submit" value="Confirm">
+    </div>
 </form>
 {% endblock main %}

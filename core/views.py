@@ -61,7 +61,7 @@ def listing(request, id):
 
 
 @login_required
-def edit_listing(request, id):
+def edit_listing(request: HttpRequest, id: int):
     try:
         listing = BookListing.objects.get(id=id, owner=request.user)
     except BookListing.DoesNotExist:
@@ -81,7 +81,7 @@ def edit_listing(request, id):
 
 
 @login_required
-def delete_listing(request, id):
+def delete_listing(request: HttpRequest, id: int):
     try:
         listing = BookListing.objects.get(id=id, owner=request.user)
     except BookListing.DoesNotExist:
@@ -92,12 +92,12 @@ def delete_listing(request, id):
         messages.success(request, "Listing deleted successfully.")
         return redirect("listings")
 
-    form = forms.Form()  # Empty form for CSRF token
-
     return render(
         request,
         "core/delete_listing.html",
-        {"listing": listing, "form": form},
+        {
+            "listing": listing,
+        },
     )
 
 
@@ -293,14 +293,17 @@ def swap(request: HttpRequest, id: int):
 @login_required
 def cancel_swap(request: HttpRequest, id: int):
     try:
-        swap = BookSwap.objects.get(id=id)
-        if swap.proposed_by != request.user:
-            raise BookSwap.DoesNotExist()
-
-        if swap.cancel(request.user):
-            return redirect("swap", swap.id)
+        swap = BookSwap.objects.get(id=id, proposed_by=request.user)
     except BookSwap.DoesNotExist:
         return redirect("index")
+
+    if request.method == "POST":
+        if swap.cancel(request.user):
+            messages.success(request, "Swap cancelled.")
+            return redirect("swaps")
+        else:
+            messages.error(request, "Something went wrong.")
+            return redirect("swap", swap.id)
 
     return render(request, "core/cancel_swap.html", context={"swap": swap})
 
@@ -308,9 +311,7 @@ def cancel_swap(request: HttpRequest, id: int):
 @login_required
 def accept_swap(request: HttpRequest, id: int):
     try:
-        swap = BookSwap.objects.get(id=id)
-        if swap.proposed_to != request.user:
-            raise BookSwap.DoesNotExist
+        swap = BookSwap.objects.get(id=id, proposed_to=request.user)
     except BookSwap.DoesNotExist:
         return redirect("index")
 
@@ -335,9 +336,7 @@ def accept_swap(request: HttpRequest, id: int):
 @login_required
 def decline_swap(request: HttpRequest, id: int):
     try:
-        swap = BookSwap.objects.get(id=id)
-        if swap.proposed_to != request.user:
-            raise BookSwap.DoesNotExist
+        swap = BookSwap.objects.get(id=id, proposed_to=request.user)
     except BookSwap.DoesNotExist:
         return redirect("index")
 
