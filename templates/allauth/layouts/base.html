@@ -5,22 +5,13 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 {{ form.media }}
 
-{% block extra_head %}
-{% endblock extra_head %}
-
 {% endblock head %}
 
 {% block main %}
 
-{% block body %}
 <div class="center">
     {% block content %}
     {% endblock content %}
 </div>
-
-{% endblock body %}
-
-{% block extra_body %}
-{% endblock extra_body %}
 
 {% endblock main %}
