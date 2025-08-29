@@ -26,9 +26,11 @@
                 {{ redirect_field }}
             {% endslot %}
             {% slot actions %}
+            <div class="display:flex justify-content:flex-end">
                 {% element button tags="prominent,signup" type="submit" %}
                     {% trans "Sign Up" %}
                 {% endelement %}
+            </div>
             {% endslot %}
         {% endelement %}
     {% endif %}

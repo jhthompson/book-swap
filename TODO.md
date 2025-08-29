@@ -3,4 +3,4 @@
 - [ ] Send emails for more swap lifecycle events (accepted, declined)
 - [ ] Improve search (sort by distance? use Postgres text search instead of icontains?)
 - [ ] What to do with deleted listings? Should it be a soft delete, related to the "completed" state when a swap is over perhaps?
-- [ ] Improve style of signup & login forms (likely override allauth templates)
+- [x] Improve style of signup & login forms (likely override allauth templates)
