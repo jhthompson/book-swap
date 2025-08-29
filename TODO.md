@@ -4,3 +4,4 @@
 - [ ] Improve search (sort by distance? use Postgres text search instead of icontains?)
 - [ ] What to do with deleted listings? Should it be a soft delete, related to the "completed" state when a swap is over perhaps?
 - [x] Improve style of signup & login forms (likely override allauth templates)
+- [ ] Add continued messaging functionality... once "accepted", can message one another?
