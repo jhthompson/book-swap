@@ -26,7 +26,7 @@ from core.forms import (
 from core.models import BookListing, BookSwap, BookSwapEvent
 
 
-def index(request):
+def index(request: HttpRequest):
     context = {}
 
     if request.user.is_authenticated:
@@ -40,7 +40,7 @@ def index(request):
 
 
 @login_required
-def listings(request):
+def listings(request: HttpRequest):
     context = {}
 
     context["listings"] = BookListing.objects.filter(owner=request.user)
@@ -49,7 +49,7 @@ def listings(request):
 
 
 @login_required
-def listing(request, id):
+def listing(request: HttpRequest, id: int):
     context = {}
 
     try:
@@ -192,7 +192,7 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
 
 
 @login_required
-def swaps(request):
+def swaps(request: HttpRequest):
     context = {}
 
     context["swaps_by_you"] = BookSwap.objects.filter(
