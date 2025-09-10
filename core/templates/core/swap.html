@@ -1,14 +1,18 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1 class="center text-align:center color-primary">{{swap.proposed_by.username}} wants to swap with {{ swap.proposed_to.username }}</h1>
+{% if you == swap.proposed_by %}
+    <h1 class="center text-align:center color-primary">You want to swap with {{ swap.proposed_to.username }}</h1>
+{% elif you == swap.proposed_to %}
+    <h1 class="center text-align:center color-primary">{{ swap.proposed_by.username }} wants to swap with you</h1>
+{% endif %}
 
 <div class="stack center">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h2>{{ swap.proposed_by.username }}'s books</h2>
+            <h2>{{ them.username }}'s books</h2>
             <ul>
-                {% for book in swap.offered_books.all %}
+                {% for book in their_books %}
                     <li>{{ book.title }}</li>
                 {% endfor %}
             </ul>
@@ -17,34 +21,42 @@
         <i class="bi bi-arrow-left-right font-size:s1"></i>
 
         <div>
-            <h2>{{ swap.proposed_to.username }}'s books</h2>
+            <h2>Your books</h2>
             <ul>
-                {% for book in swap.requested_books.all %}
+                {% for book in your_books %}
                     <li>{{ book.title }}</li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 
-    <ol class="stack list-style:none padding:0 display:flex flex-direction:column align-items:flex-start">
+    <ol class="stack list-style:none padding:0 display:flex flex-direction:column align-items:center" id="chat-log">
         {% for entry in swap.get_timeline %}
-            <div class="{% if entry.item.user == swap.proposed_by %}margin-inline-end:s0{% else %}margin-inline-start:s0 align-self:flex-end{% endif %}">
-                {% if entry.type == 'event' %}
-                    <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap
-                        <small style="font-style: italic" class="display:block">{{ entry.item.created_at }}</small>
-                    </li>
-                {% elif entry.type == 'message' %}
-                    <li speech-bubble pright acenter>{{ entry.item.content }}
-                        <small style="font-style: italic" class="display:block">{{ entry.item.created_at }}</small>
-                    </li>
-                {% endif %}
-            </div>
+            {% if entry.type == 'event' %}
+                <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap
+                    <small class="display:block font-style:italic color:muted">{{ entry.item.created_at }}</small>
+                </li>
+            {% elif entry.type == 'message' %}
+                <li 
+                    speech-bubble 
+                    {% if entry.item.sender != you %}
+                        pleft
+                    {% else %}
+                        pright
+                    {% endif %}
+                    acenter
+                    class="{% if entry.item.sender != you %}margin-inline-end:s0 align-self:flex-start{% else %}margin-inline-start:s0 align-self:flex-end{% endif %}"
+                    style="max-width: calc(640px - 1.5rem); overflow-wrap: break-word;">
+                    {{ entry.item.content }}
+                    <small class="display:block font-style:italic color:muted">{{ entry.item.created_at }}</small>
+                </li>
+            {% endif %}
         {% endfor %}
     </ol>
 
     {% if swap.status == 'PROPOSED' %}
     <div class="display:flex justify-content:flex-end gap:s0">
-        {% if swap.proposed_by == request.user %}
+        {% if swap.proposed_by == you %}
             <a class="button" href="{% url 'cancel_swap' swap.id %}">Cancel</a>
         {% else %}
             <a class="button" href="{% url 'accept_swap' swap.id %}">Accept</a>
@@ -54,10 +66,95 @@
     {% elif swap.status == 'CANCELLED' %}
 
     {% elif swap.status == 'ACCEPTED' %}
-
+    <div>
+        <textarea id="chat-message-input" type="text" class="width:100" maxlength="255" rows='5'></textarea>
+        <small id="char-count" class="color:muted">0/255</small>
+        <div class="display:flex justify-content:flex-end">
+            <input id="chat-message-submit" type="button" class="button" value="Send">
+        </div>
+    </div>
     {% elif swap.status == 'DECLINED' %}
 
     {% endif %}
+
 </div>
 
 {% endblock main %}
+
+{% block tail %}
+{{ swap_id|json_script:"swap-id" }}
+{{ you.id|json_script:"user-id" }}
+<script>
+    const swapId = JSON.parse(document.getElementById('swap-id').textContent);
+    const userId = JSON.parse(document.getElementById('user-id').textContent);
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/swap/'
+        + swapId
+        + '/messages'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+
+        const chatMessage = document.createElement('li');
+        chatMessage.setAttribute('speech-bubble', '');
+        chatMessage.style.maxWidth = 'calc(640px - 1.5rem)';
+        chatMessage.style.overflowWrap = 'break-word';
+
+        if (data.user_id != userId) {
+            chatMessage.setAttribute('pleft', '');
+            chatMessage.setAttribute('acenter', '');
+            chatMessage.classList.add('margin-inline-end:s0', 'align-self:flex-start');
+        } else {
+            chatMessage.setAttribute('pright', '');
+            chatMessage.setAttribute('acenter', '');
+            chatMessage.classList.add('margin-inline-start:s0', 'align-self:flex-end');
+        }
+
+        chatMessage.textContent = data.message;
+
+        const timestamp = document.createElement('small');
+        timestamp.classList.add('display:block', 'font-style:italic', 'color:muted');
+        timestamp.textContent = data.timestamp;
+
+        chatMessage.appendChild(timestamp);
+        document.querySelector('#chat-log').appendChild(chatMessage);
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.key === 'Enter') {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+
+        if (message.length > 255) {
+            alert('Message cannot be longer than 255 characters.');
+            return;
+        }
+
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+
+    // Character counter for the message input
+    const messageInput = document.getElementById('chat-message-input');
+    const charCount = document.getElementById('char-count');
+    messageInput.addEventListener('input', function(e) {
+        const count = e.target.value.length;
+        document.getElementById('char-count').textContent = `${count}/255`;
+    });
+</script>
+{% endblock tail %}

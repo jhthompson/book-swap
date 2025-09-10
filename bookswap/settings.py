@@ -33,6 +33,8 @@ INTERNAL_IPS = ["127.0.0.1"]
 # Application definition
 
 INSTALLED_APPS = [
+    # Channels
+    "daphne",
     # Django
     "django.contrib.admin",
     "django.contrib.auth",
@@ -87,7 +89,17 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "bookswap.wsgi.application"
+# WSGI_APPLICATION = "bookswap.wsgi.application"
+ASGI_APPLICATION = "bookswap.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 
 # Database

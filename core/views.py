@@ -287,6 +287,20 @@ def swap(request: HttpRequest, id: int):
     except BookSwap.DoesNotExist:
         return redirect("index")
 
+    if request.user == swap.proposed_by:
+        context["your_books"] = swap.offered_books.all()
+        context["their_books"] = swap.requested_books.all()
+        context["them"] = swap.proposed_to
+    elif request.user == swap.proposed_to:
+        context["your_books"] = swap.requested_books.all()
+        context["their_books"] = swap.offered_books.all()
+        context["them"] = swap.proposed_by
+    else:
+        raise BookSwap.DoesNotExist
+
+    context["you"] = request.user
+    context["swap_id"] = swap.id
+
     return render(request, "core/swap.html", context)
 
 
