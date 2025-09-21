@@ -71,7 +71,6 @@
     text-decoration: none;
     font-weight: bold;
     text-transform: uppercase;
-    box-shadow: 6px 6px 0 var(--primary);
     font-size: 14px;
     letter-spacing: 1px;
     transition: all 0.1s ease;
@@ -82,13 +81,6 @@
 
     &:hover {
         color: #fff;
-        transform: translate(3px, 3px);
-        box-shadow: 3px 3px 0 var(--primary);
-    }
-
-    &:active {
-        transform: translate(6px, 6px);
-        box-shadow: none;
     }
 }
 
@@ -100,7 +92,7 @@
 }
 
 [speech-bubble] {
-    --bbColor: var(--primary-background);
+    --bbColor: var(--color-primary-100);
     --bbArrowSize: 1.5rem;
     --bbPadding: 1rem;
     background: var(--bbColor);

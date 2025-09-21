@@ -1,11 +1,6 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-{% if you == swap.proposed_by %}
-    <h1 class="center text-align:center color-primary">You want to swap with {{ swap.proposed_to.username }}</h1>
-{% elif you == swap.proposed_to %}
-    <h1 class="center text-align:center color-primary">{{ swap.proposed_by.username }} wants to swap with you</h1>
-{% endif %}
 
 <div class="stack center">
     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -30,7 +25,7 @@
         </div>
     </div>
 
-    <ol class="stack list-style:none padding:0 display:flex flex-direction:column align-items:center" id="chat-log">
+    <ol id="chat-log" class="stack list-style:none padding:0 display:flex flex-direction:column align-items:center" style="height: 60vh; overflow-y:auto;">
         {% for entry in swap.get_timeline %}
             {% if entry.type == 'event' %}
                 <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap
@@ -45,10 +40,10 @@
                         pright
                     {% endif %}
                     acenter
-                    class="{% if entry.item.sender != you %}margin-inline-end:s0 align-self:flex-start{% else %}margin-inline-start:s0 align-self:flex-end{% endif %}"
-                    style="max-width: calc(640px - 1.5rem); overflow-wrap: break-word;">
+                    class="{% if entry.item.sender != you %}align-self:flex-start{% else %}align-self:flex-end{% endif %}"
+                    style="{% if entry.item.sender != you %}--bbColor: var(--color-primary-50); {% endif %}max-width: clamp(0px, calc(100% - 1.5rem), calc(640px - 1.5rem - var(--bbArrowSize))); overflow-wrap: break-word;">
                     {{ entry.item.content }}
-                    <small class="display:block font-style:italic color:muted">{{ entry.item.created_at }}</small>
+                    <small class="display:block font-style:italic" style="margin-top: 0.5rem;">{{ entry.item.created_at }}</small>
                 </li>
             {% endif %}
         {% endfor %}
@@ -100,17 +95,18 @@
 
         const chatMessage = document.createElement('li');
         chatMessage.setAttribute('speech-bubble', '');
-        chatMessage.style.maxWidth = 'calc(640px - 1.5rem)';
+        chatMessage.style.maxWidth = 'clamp(0px, calc(100% - 1.5rem), calc(640px - 1.5rem - var(--bbArrowSize)))';
         chatMessage.style.overflowWrap = 'break-word';
 
         if (data.user_id != userId) {
             chatMessage.setAttribute('pleft', '');
             chatMessage.setAttribute('acenter', '');
-            chatMessage.classList.add('margin-inline-end:s0', 'align-self:flex-start');
+            chatMessage.classList.add('align-self:flex-start');
+            chatMessage.style.setProperty('--bbColor', 'var(--color-primary-50)');
         } else {
             chatMessage.setAttribute('pright', '');
             chatMessage.setAttribute('acenter', '');
-            chatMessage.classList.add('margin-inline-start:s0', 'align-self:flex-end');
+            chatMessage.classList.add('align-self:flex-end');
         }
 
         chatMessage.textContent = data.message;
@@ -121,6 +117,8 @@
 
         chatMessage.appendChild(timestamp);
         document.querySelector('#chat-log').appendChild(chatMessage);
+
+        scrollChatToBottom();
     };
 
     chatSocket.onclose = function(e) {
@@ -156,5 +154,13 @@
         const count = e.target.value.length;
         document.getElementById('char-count').textContent = `${count}/255`;
     });
+
+    function scrollChatToBottom() {
+        const chatLog = document.getElementById('chat-log');
+        if (chatLog) {
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+    }
+    document.addEventListener('DOMContentLoaded', scrollChatToBottom);
 </script>
 {% endblock tail %}

@@ -15,6 +15,17 @@
     --primary: oklch(0.5 0.09 156);
     --primary-background: oklch(0.9 0.09 156);
     --muted: #6c757d;
+
+    --color-primary-50: #deffe8;
+    --color-primary-100: #a8e8bf;
+    --color-primary-200: #8ac9a1;
+    --color-primary-300: #6dab84;
+    --color-primary-400: #508e69;
+    --color-primary-500: #31724d;
+    --color-primary-600: #006439;
+    --color-primary-700: #004b2a;
+    --color-primary-800: #00331a;
+    --color-primary-900: #001f0e;
 }
 
 * {
