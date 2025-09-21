@@ -23,7 +23,7 @@
                     <small class="display:block">{{ swap.created_at|timesince }} ago</small>
                 </li>
             {% empty %}
-                <li>No swaps proposed by you.</li>
+                <li class="list-style:none font-style:italic">None</li>
             {% endfor %}
         </ul>
     </div>
@@ -47,7 +47,7 @@
                     <small class="display:block">{{ swap.created_at|timesince }} ago</small>
                 </li>
             {% empty %}
-                <li>No swaps proposed to you.</li>
+                <li class="list-style:none font-style:italic">None</li>
             {% endfor %}
         </ul>
     </div>
