@@ -17,6 +17,7 @@ urlpatterns = [
     path("swaps", views.swaps, name="swaps"),
     path("swaps/new", views.new_swap, name="new_swap"),
     path("swaps/<int:id>", views.swap, name="swap"),
+    path("swaps/<int:id>/messages", views.swap_messages, name="swap_messages"),
     path("swaps/<int:id>/cancel", views.cancel_swap, name="cancel_swap"),
     path("swaps/<int:id>/accept", views.accept_swap, name="accept_swap"),
     path("swaps/<int:id>/decline", views.decline_swap, name="decline_swap"),

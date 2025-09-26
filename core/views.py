@@ -287,7 +287,44 @@ def swap(request: HttpRequest, id: int):
     except BookSwap.DoesNotExist:
         return redirect("index")
 
+    if request.user == swap.proposed_by:
+        context["your_books"] = swap.offered_books.all()
+        context["their_books"] = swap.requested_books.all()
+        context["them"] = swap.proposed_to
+    elif request.user == swap.proposed_to:
+        context["your_books"] = swap.requested_books.all()
+        context["their_books"] = swap.offered_books.all()
+        context["them"] = swap.proposed_by
+
+    context["you"] = request.user
+    context["swap_id"] = swap.id
+
     return render(request, "core/swap.html", context)
+
+
+@login_required
+def swap_messages(request: HttpRequest, id: int):
+    try:
+        swap = BookSwap.objects.get(id=id)
+        if swap.proposed_by != request.user and swap.proposed_to != request.user:
+            raise BookSwap.DoesNotExist
+    except BookSwap.DoesNotExist:
+        return redirect("index")
+
+    if request.method == "POST":
+        content = request.POST.get("content", "").strip()
+        if content:
+            from core.models import BookSwapMessage
+
+            BookSwapMessage.objects.create(
+                swap=swap,
+                sender=request.user,
+                content=content,
+            )
+        else:
+            messages.error(request, "Message cannot be empty.")
+
+    return redirect("swap", id=swap.id)
 
 
 @login_required
