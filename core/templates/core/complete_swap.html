@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+
+{% block main %}
+<h1 class="text-align:center color-primary">Complete Swap</h1>
+
+<form class="center stack" method="post">
+    {% csrf_token %}
+    <p>Have you swapped books with <strong>{{ swap.proposed_to.username }}</strong>? This will mark the swap as completed.</p>
+    <div class="display:flex justify-content:flex-end">
+        <button class="button">Confirm</button>
+    </div>
+</form>
+{% endblock main %}

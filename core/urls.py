@@ -20,6 +20,7 @@ urlpatterns = [
     path("swaps/<int:id>/messages", views.swap_messages, name="swap_messages"),
     path("swaps/<int:id>/cancel", views.cancel_swap, name="cancel_swap"),
     path("swaps/<int:id>/accept", views.accept_swap, name="accept_swap"),
+    path("swaps/<int:id>/complete", views.complete_swap, name="complete_swap"),
     path("swaps/<int:id>/decline", views.decline_swap, name="decline_swap"),
     # search
     path("search", views.search, name="search"),

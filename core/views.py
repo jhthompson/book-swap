@@ -365,7 +365,25 @@ def accept_swap(request: HttpRequest, id: int):
         "core/accept_swap.html",
         context={"swap": swap},
     )
+    
+@login_required
+def complete_swap(request: HttpRequest, id: int):
+    try:
+        swap = BookSwap.objects.get(id=id, proposed_by=request.user)
+    except BookSwap.DoesNotExist:
+        return redirect("index")
 
+    if request.method == "POST":
+        if swap.complete(user=request.user):
+            return redirect("swap", swap.id)
+        else:
+            raise PermissionDenied()
+
+    return render(
+        request,
+        "core/complete_swap.html",
+        context={"swap": swap},
+    )
 
 @login_required
 def decline_swap(request: HttpRequest, id: int):

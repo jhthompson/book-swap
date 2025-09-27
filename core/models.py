@@ -43,6 +43,7 @@ class BookSwap(models.Model):
         PROPOSED = "PROPOSED", "Proposed"
         CANCELLED = "CANCELLED", "Cancelled"
         ACCEPTED = "ACCEPTED", "Accepted"
+        COMPLETED = "COMPLETED", "Completed"
         DECLINED = "DECLINED", "Declined"
 
     proposed_by = models.ForeignKey(
@@ -134,6 +135,24 @@ class BookSwap(models.Model):
 
         return False
 
+    def complete(self, user: User):
+        if user != self.proposed_by:
+            raise PermissionDenied("Only proposer can complete this swap")
+
+        if self.status == self.Status.ACCEPTED:
+            self.status = self.Status.COMPLETED
+            self.save()
+
+            BookSwapEvent.objects.create(
+                swap=self,
+                user=user,
+                type=BookSwapEvent.Type.COMPLETE,
+            )
+
+            return True
+
+        return False
+
     def decline(self, user: User):
         if user != self.proposed_to:
             raise PermissionDenied("Only the receiver can decline this swap")
@@ -185,10 +204,11 @@ class BookSwapEvent(models.Model):
         CANCEL = "CANCEL", "Cancelled"
         ACCEPT = "ACCEPT", "Accepted"
         DECLINE = "DECLINE", "Declined"
+        COMPLETE = "COMPLETE", "Completed"
 
     swap = models.ForeignKey(BookSwap, on_delete=models.CASCADE, related_name="events")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    type = models.CharField(max_length=7, choices=Type.choices)
+    type = models.CharField(max_length=8, choices=Type.choices)
     created_at = models.DateTimeField(auto_now_add=True)
 
 

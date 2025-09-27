@@ -63,12 +63,17 @@
     {% elif swap.status == 'ACCEPTED' %}
         <form action="{% url 'swap_messages' swap.id %}" method="post" class="stack width:100">
             {% csrf_token %}
-            <textarea name="content" type="text" class="width:100" maxlength="255" rows='5' required></textarea>
+            <textarea name="content" type="text" class="width:100" maxlength="255" rows='5'></textarea>
             <div class="display:flex justify-content:flex-end">
-                <input id="chat-message-submit" type="submit" class="button" value="Send">
+                {% if swap.proposed_by == you %}
+                    <a class="button margin-inline-end:auto" href="{% url 'complete_swap' swap.id %}">Complete</a>
+                {% endif %}
+                <input type="submit" class="button" value="Send">
             </div>
         </form>
     {% elif swap.status == 'DECLINED' %}
+
+    {% elif swap.status == 'COMPLETED' %}
 
     {% endif %}
 </div>
