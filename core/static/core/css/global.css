@@ -25,16 +25,28 @@ body {
     padding: var(--s0);
 }
 
-a {
+a,
+.link {
     color: black;
     transition: all 0.2s ease;
     text-underline-offset: 4px;
 }
 
-a:visited {
+a:visited,
+.link:visited {
     color: black;
 }
 
-a:hover {
+a:hover,
+.link:hover {
     color: var(--primary);
+}
+
+.link {
+    background: none !important;
+    border: none;
+    padding: 0 !important;
+    font-family: arial, sans-serif;
+    text-decoration: underline;
+    cursor: pointer;
 }

@@ -28,10 +28,10 @@
                     {% if user.is_authenticated %}  
                         <form action="{% url 'account_logout' %}" method="post">
                             {% csrf_token %}
-                            <button class="button" type="submit">Log Out</button>
+                            <button class="link" type="submit">Log Out</button>
                         </form>
                     {% else %}
-                        <a class="button" href="{% url 'account_login' %}">Log In</a>
+                        <a href="{% url 'account_login' %}">Log In</a>
                     {% endif %}
                 </li>
             </ol>
