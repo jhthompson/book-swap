@@ -16,7 +16,6 @@ from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 
 from core.forms import (
-    AcceptSwapForm,
     BookListingDetailsForm,
     BookListingForm,
     BookListingISBNForm,
@@ -353,20 +352,18 @@ def accept_swap(request: HttpRequest, id: int):
         return redirect("index")
 
     if request.method == "POST":
-        form = AcceptSwapForm(request.POST)
 
-        if form.is_valid():
-            message = form.cleaned_data["message"]
+        if swap.accept(user=request.user):
+            swap.notify(request, BookSwapEvent.Type.ACCEPT)
 
-            if swap.accept(user=request.user, message=message):
-                return redirect("swaps")
-            else:
-                raise PermissionDenied()
+            return redirect("swap", swap.id)
+        else:
+            raise PermissionDenied()
 
     return render(
         request,
         "core/accept_swap.html",
-        context={"swap": swap, "form": AcceptSwapForm()},
+        context={"swap": swap},
     )
 
 

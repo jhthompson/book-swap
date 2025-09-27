@@ -3,11 +3,9 @@
 {% block main %}
 <form class="center stack" method="post">
     {% csrf_token %}
-    <table>
-        {{ form }}
-    </table>
+    <p>Are you sure you want to accept this swap? This will let you message <strong>{{ swap.proposed_by.username }}</strong> to coordinate details.</p>
     <div class="display:flex justify-content:flex-end">
-        <input class="button" type="submit" value="Confirm">
+        <button class="button">Confirm</button>
     </div>
 </form>
 {% endblock main %}

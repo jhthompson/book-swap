@@ -79,12 +79,8 @@ class BookSwap(models.Model):
                     {
                         "proposed_by": self.proposed_by,
                         "swap_url": request.build_absolute_uri(self.get_absolute_url()),
-                        "offered_books": ", ".join(
-                            [book.title for book in self.offered_books.all()]
-                        ),
-                        "requested_books": ", ".join(
-                            [book.title for book in self.requested_books.all()]
-                        ),
+                        "offered_books": self.offered_books.all(),
+                        "requested_books": self.requested_books.all(),
                     },
                 )
                 recipient = self.proposed_to
@@ -99,11 +95,28 @@ class BookSwap(models.Model):
             case BookSwapEvent.Type.CANCEL:
                 pass
             case BookSwapEvent.Type.ACCEPT:
-                pass
+                subject = f"{self.proposed_to.username} accepted your book swap"
+                message = render_to_string(
+                    "core/emails/accepted_swap_notification.txt",
+                    {
+                        "proposed_to": self.proposed_to,
+                        "swap_url": request.build_absolute_uri(self.get_absolute_url()),
+                        "offered_books": self.offered_books.all(),
+                        "requested_books": self.requested_books.all(),
+                    },
+                )
+                recipient = self.proposed_by
+
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=None,
+                    recipient_list=[recipient.email],
+                )
             case BookSwapEvent.Type.DECLINE:
                 pass
 
-    def accept(self, user: User, message: str = None):
+    def accept(self, user: User):
         if user != self.proposed_to:
             raise PermissionDenied("Only the receiver can accept this swap")
 
@@ -116,13 +129,6 @@ class BookSwap(models.Model):
                 user=user,
                 type=BookSwapEvent.Type.ACCEPT,
             )
-
-            if message:
-                BookSwapMessage.objects.create(
-                    swap=self,
-                    sender=user,
-                    content=message,
-                )
 
             return True
 
