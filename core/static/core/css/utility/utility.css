@@ -78,6 +78,10 @@
     margin-block-start: var(--s-2);
 }
 
+.margin-block-end\:s0 {
+    margin-block-end: var(--s0);
+}
+
 .margin-inline-end\:auto {
     margin-inline-end: auto;
 }
