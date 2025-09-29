@@ -137,7 +137,7 @@ class BookSwap(models.Model):
 
     def complete(self, user: User):
         if user != self.proposed_by:
-            raise PermissionDenied("Only proposer can complete this swap")
+            raise PermissionDenied("Only the proposer can complete this swap")
 
         if self.status == self.Status.ACCEPTED:
             self.status = self.Status.COMPLETED
