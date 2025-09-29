@@ -5,9 +5,9 @@
 
 <div class="stack">
     <div>
-        <h2 class="center color-primary">Created</h2>
+        <h2 class="center color-primary">Pending</h2>
         <ul class="center stack padding:0" style="--space: 1rem">
-            {% for swap in swaps_by_you %}
+            {% for swap in open_swaps %}
                 <li class="box list-style:none">
                     <a href="{% url 'swap' swap.id %}">
                         {% for book in swap.offered_books.all %}
@@ -20,18 +20,20 @@
                         {% endfor %}
                     </a>
 
-                    <small class="display:block">{{ swap.created_at|timesince }} ago</small>
+                    {% with most_recent_event=swap.ordered_events|first %}
+                        <small class="display:block">{{ most_recent_event.get_type_display }} by {{ most_recent_event.user.username }} {{ most_recent_event.created_at|timesince }} ago</small>
+                    {% endwith %}
                 </li>
             {% empty %}
-                <li>No swaps proposed by you.</li>
+                <li class="list-style:none">No pending swaps.</li>
             {% endfor %}
         </ul>
     </div>
 
     <div>
-        <h2 class="center color-primary">Received</h2>
+        <h2 class="center color-primary">Closed</h2>
         <ul class="center stack padding:0" style="--space: 1rem">
-            {% for swap in swaps_to_you %}
+            {% for swap in closed_swaps %}
                 <li class="box list-style:none">
                     <a href="{% url 'swap' swap.id %}">
                         {% for book in swap.requested_books.all %}
@@ -44,10 +46,12 @@
                         {% endfor %}
                     </a>
 
-                    <small class="display:block">{{ swap.created_at|timesince }} ago</small>
+                    {% with most_recent_event=swap.ordered_events|first %}
+                        <small class="display:block">{{ most_recent_event.get_type_display }} by {{ most_recent_event.user.username }} {{ most_recent_event.created_at|timesince }} ago</small>
+                    {% endwith %}
                 </li>
             {% empty %}
-                <li>No swaps proposed to you.</li>
+                <li class="list-style:none">No closed swaps.</li>
             {% endfor %}
         </ul>
     </div>

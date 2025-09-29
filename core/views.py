@@ -12,6 +12,7 @@ from django.contrib.gis.geos import Polygon
 from django.core.exceptions import PermissionDenied
 from django.core.files.storage import FileSystemStorage
 from django.core.paginator import Paginator
+from django.db.models import Prefetch, Q
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import redirect, render
 
@@ -194,12 +195,39 @@ class BookListingWizardView(LoginRequiredMixin, SessionWizardView):
 def swaps(request: HttpRequest):
     context = {}
 
-    context["swaps_by_you"] = BookSwap.objects.filter(
-        proposed_by=request.user
-    ).order_by("-created_at")
-    context["swaps_to_you"] = BookSwap.objects.filter(
-        proposed_to=request.user
-    ).order_by("-created_at")
+    is_user_involved = Q(proposed_by=request.user) | Q(proposed_to=request.user)
+    is_open = Q(status=BookSwap.Status.PROPOSED) | Q(status=BookSwap.Status.ACCEPTED)
+
+    involved_open_swaps = BookSwap.objects.filter(is_user_involved & is_open)
+    involved_closed_swaps = BookSwap.objects.filter(is_user_involved & ~is_open)
+
+    context["open_swaps"] = involved_open_swaps.order_by(
+        "-created_at"
+    ).prefetch_related(
+        "requested_books",
+        "offered_books",
+        Prefetch(
+            "events",
+            queryset=BookSwapEvent.objects.order_by("-created_at").select_related(
+                "user"
+            ),
+            to_attr="ordered_events",
+        ),
+    )
+
+    context["closed_swaps"] = involved_closed_swaps.order_by(
+        "-created_at"
+    ).prefetch_related(
+        "requested_books",
+        "offered_books",
+        Prefetch(
+            "events",
+            queryset=BookSwapEvent.objects.order_by("-created_at").select_related(
+                "user"
+            ),
+            to_attr="ordered_events",
+        ),
+    )
 
     return render(request, "core/swaps.html", context)
 
@@ -352,7 +380,6 @@ def accept_swap(request: HttpRequest, id: int):
         return redirect("index")
 
     if request.method == "POST":
-
         if swap.accept(user=request.user):
             swap.notify(request, BookSwapEvent.Type.ACCEPT)
 
@@ -365,7 +392,8 @@ def accept_swap(request: HttpRequest, id: int):
         "core/accept_swap.html",
         context={"swap": swap},
     )
-    
+
+
 @login_required
 def complete_swap(request: HttpRequest, id: int):
     try:
@@ -384,6 +412,7 @@ def complete_swap(request: HttpRequest, id: int):
         "core/complete_swap.html",
         context={"swap": swap},
     )
+
 
 @login_required
 def decline_swap(request: HttpRequest, id: int):
