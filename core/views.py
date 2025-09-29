@@ -198,10 +198,10 @@ def swaps(request: HttpRequest):
     is_user_involved = Q(proposed_by=request.user) | Q(proposed_to=request.user)
     is_open = Q(status=BookSwap.Status.PROPOSED) | Q(status=BookSwap.Status.ACCEPTED)
 
-    involved_open_swaps = BookSwap.objects.filter(is_user_involved & is_open)
+    involved_pending_swaps = BookSwap.objects.filter(is_user_involved & is_open)
     involved_closed_swaps = BookSwap.objects.filter(is_user_involved & ~is_open)
 
-    context["open_swaps"] = involved_open_swaps.order_by(
+    context["pending_swaps"] = involved_pending_swaps.order_by(
         "-created_at"
     ).prefetch_related(
         "requested_books",
