@@ -29,12 +29,14 @@ from core.models import BookListing, BookSwap, BookSwapEvent
 def index(request: HttpRequest):
     context = {}
 
+    listings = BookListing.objects.filter(status=BookListing.Status.AVAILABLE).order_by(
+        "-created_at"
+    )
+
     if request.user.is_authenticated:
-        context["listings"] = BookListing.objects.exclude(owner=request.user).order_by(
-            "-created_at"
-        )
-    else:
-        context["listings"] = BookListing.objects.all().order_by("-created_at")
+        listings = listings.exclude(owner=request.user)
+
+    context["listings"] = listings
 
     return render(request, "core/index.html", context)
 
@@ -43,7 +45,9 @@ def index(request: HttpRequest):
 def listings(request: HttpRequest):
     context = {}
 
-    context["listings"] = BookListing.objects.filter(owner=request.user)
+    context["listings"] = BookListing.objects.filter(
+        owner=request.user, status=BookListing.Status.AVAILABLE
+    ).order_by("-created_at")
 
     return render(request, "core/listings.html", context)
 
@@ -53,7 +57,9 @@ def listing(request: HttpRequest, id: int):
     context = {}
 
     try:
-        context["listing"] = BookListing.objects.get(id=id, owner=request.user)
+        context["listing"] = BookListing.objects.get(
+            id=id, owner=request.user, status=BookListing.Status.AVAILABLE
+        )
     except BookListing.DoesNotExist:
         return redirect("listings")
 
@@ -63,7 +69,9 @@ def listing(request: HttpRequest, id: int):
 @login_required
 def edit_listing(request: HttpRequest, id: int):
     try:
-        listing = BookListing.objects.get(id=id, owner=request.user)
+        listing = BookListing.objects.get(
+            id=id, owner=request.user, status=BookListing.Status.AVAILABLE
+        )
     except BookListing.DoesNotExist:
         return redirect("listings")
 
@@ -83,14 +91,19 @@ def edit_listing(request: HttpRequest, id: int):
 @login_required
 def delete_listing(request: HttpRequest, id: int):
     try:
-        listing = BookListing.objects.get(id=id, owner=request.user)
+        listing = BookListing.objects.get(
+            id=id, owner=request.user, status=BookListing.Status.AVAILABLE
+        )
     except BookListing.DoesNotExist:
         return redirect("listings")
 
     if request.method == "POST":
-        listing.delete()
-        messages.success(request, "Listing deleted successfully.")
-        return redirect("listings")
+        if listing.remove():
+            messages.success(request, "Listing deleted.")
+            return redirect("listings")
+        else:
+            messages.error(request, "Something went wrong.")
+            return redirect("listings")
 
     return render(
         request,
@@ -239,7 +252,9 @@ def new_swap(request: HttpRequest):
     proposed_to = User.objects.get(id=proposed_to_id)
     requested_book_listing_ids = request.GET.getlist("requested_book_listing_ids")
     requested_book_listings = BookListing.objects.filter(
-        id__in=requested_book_listing_ids, owner=proposed_to
+        id__in=requested_book_listing_ids,
+        owner=proposed_to,
+        status=BookListing.Status.AVAILABLE,
     )
 
     if proposed_by == proposed_to:
@@ -438,7 +453,7 @@ def search(request: HttpRequest):
     query = request.GET.get("query", "")
     context = {"query": query}
 
-    queryset = BookListing.objects.all()
+    queryset = BookListing.objects.filter(status=BookListing.Status.AVAILABLE)
 
     if query:
         queryset = queryset.filter(title__icontains=query) | queryset.filter(
@@ -473,7 +488,9 @@ def book_listings_api(request: HttpRequest):
         return JsonResponse({"error": "Invalid bounds"}, status=400)
 
     bbox = Polygon.from_bbox((west, south, east, north))
-    listings = BookListing.objects.filter(owner__userprofile__location__within=bbox)
+    listings = BookListing.objects.filter(
+        status=BookListing.Status.AVAILABLE, owner__userprofile__location__within=bbox
+    )
 
     if request.user.is_authenticated:
         listings = listings.exclude(owner=request.user)

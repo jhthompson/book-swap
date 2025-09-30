@@ -21,21 +21,38 @@ class UserProfile(models.Model):
 
 
 class BookListing(models.Model):
+    class Status(models.TextChoices):
+        AVAILABLE = "AVAILABLE", "Available"
+        SWAPPED = "SWAPPED", "Swapped"
+        REMOVED = "REMOVED", "Removed"
+
     # user provided
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     cover_photo = models.FileField(upload_to="book_listing_covers/")
     isbn = ISBNField(blank=True)
 
-    # system generated
+    # system managed
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=9, choices=Status.choices, default=Status.AVAILABLE
+    )
 
     def __str__(self):
         return self.title
 
     def get_city(self):
         return self.owner.userprofile.city
+
+    def remove(self):
+        if self.status == self.Status.AVAILABLE:
+            self.status = self.Status.REMOVED
+            self.save()
+
+            return True
+
+        return False
 
 
 class BookSwap(models.Model):
@@ -142,6 +159,10 @@ class BookSwap(models.Model):
         if self.status == self.Status.ACCEPTED:
             self.status = self.Status.COMPLETED
             self.save()
+
+            # TODO: have to do much more here...
+            # - soft delete books listed in this swap?
+            # - cancel any other swaps involving these listings?
 
             BookSwapEvent.objects.create(
                 swap=self,

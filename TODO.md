@@ -2,6 +2,6 @@
 - [x] Page (map view?) to explore nearby books
 - [ ] Send emails for more swap lifecycle events (accepted, declined)
 - [ ] Improve search (sort by distance? use Postgres text search instead of icontains?)
-- [ ] What to do with deleted listings? Should it be a soft delete, related to the "completed" state when a swap is over perhaps?
+- [x] What to do with deleted listings? Should it be a soft delete, related to the "completed" state when a swap is over perhaps?
 - [x] Improve style of signup & login forms (likely override allauth templates)
 - [x] Add continued messaging functionality... once "accepted", can message one another?

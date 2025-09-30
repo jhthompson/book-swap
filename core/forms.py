@@ -73,7 +73,7 @@ class BookListingSelectionFormSet(forms.BaseFormSet):
 
 class BookListingSelectionForm(forms.Form):
     book_listings = forms.ModelMultipleChoiceField(
-        queryset=BookListing.objects.all(),
+        queryset=BookListing.objects.filter(status=BookListing.Status.AVAILABLE),
         widget=forms.CheckboxSelectMultiple,
         label="Select books",
     )
@@ -83,7 +83,6 @@ class BookListingSelectionForm(forms.Form):
         super().__init__(*args, **kwargs)
         if owner:
             self.fields["book_listings"].queryset = BookListing.objects.filter(
-                owner=owner
+                owner=owner, status=BookListing.Status.AVAILABLE
             )
             self.fields["book_listings"].label = f"{owner.username}'s books"
-
