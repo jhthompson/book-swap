@@ -5,3 +5,4 @@
 - [x] What to do with deleted listings? Should it be a soft delete, related to the "completed" state when a swap is over perhaps?
 - [x] Improve style of signup & login forms (likely override allauth templates)
 - [x] Add continued messaging functionality... once "accepted", can message one another?
+- [ ] Edit profile
