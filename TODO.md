@@ -6,3 +6,4 @@
 - [x] Improve style of signup & login forms (likely override allauth templates)
 - [x] Add continued messaging functionality... once "accepted", can message one another?
 - [ ] Edit profile
+- [ ] Add genres to listings
