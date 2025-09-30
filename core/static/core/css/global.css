@@ -50,3 +50,8 @@ a:hover,
     text-decoration: underline;
     cursor: pointer;
 }
+
+a[data-badge-count]:after {
+    color: var(--primary);
+    content: ' (' attr(data-badge-count) ')';
+}

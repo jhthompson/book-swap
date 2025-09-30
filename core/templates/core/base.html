@@ -22,7 +22,7 @@
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'listings' %}">Your Listings</a></li>
                     <li><a href="{% url 'new_listing' %}">New Listing</a></li>
-                    <li><a href="{% url 'swaps' %}">Your Swaps</a></li>
+                    <li><a href="{% url 'swaps' %}" {% if open_swaps_count %}data-badge-count="{{ open_swaps_count }}"{% endif %}>Your Swaps</a></li>
                 {% endif %}
                 <li>
                     {% if user.is_authenticated %}  
