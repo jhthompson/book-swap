@@ -21,7 +21,11 @@
                     </a>
 
                     {% with most_recent_event=swap.ordered_events|first %}
-                        <small class="display:block">{{ most_recent_event.get_type_display }} by {{ most_recent_event.user.username }} {{ most_recent_event.created_at|timesince }} ago</small>
+                        {% if most_recent_event.user %}
+                            <small class="display:block">{{ most_recent_event.get_type_display }} by {{ most_recent_event.user.username }} {{ most_recent_event.created_at|timesince }} ago</small>
+                        {% else %}
+                            <small class="display:block">{{ most_recent_event.get_type_display }} {{ most_recent_event.created_at|timesince }} ago</small>
+                        {% endif %}
                     {% endwith %}
                 </li>
             {% empty %}
@@ -47,7 +51,11 @@
                     </a>
 
                     {% with most_recent_event=swap.ordered_events|first %}
-                        <small class="display:block">{{ most_recent_event.get_type_display }} by {{ most_recent_event.user.username }} {{ most_recent_event.created_at|timesince }} ago</small>
+                        {% if most_recent_event.user %}
+                            <small class="display:block">{{ most_recent_event.get_type_display }} by {{ most_recent_event.user.username }} {{ most_recent_event.created_at|timesince }} ago</small>
+                        {% else %}
+                            <small class="display:block">{{ most_recent_event.get_type_display }} {{ most_recent_event.created_at|timesince }} ago</small>
+                        {% endif %}
                     {% endwith %}
                 </li>
             {% empty %}

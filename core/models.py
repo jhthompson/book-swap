@@ -1,3 +1,5 @@
+import logging
+
 from isbn_field import ISBNField
 
 from django.contrib.auth.models import User
@@ -5,10 +7,13 @@ from django.contrib.gis.db import models as geo_models
 from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.db import models
+from django.db.models import Q
 from django.forms import ValidationError
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.urls import reverse
+
+logger = logging.getLogger(__name__)
 
 
 class UserProfile(models.Model):
@@ -56,9 +61,25 @@ class BookListing(models.Model):
 
 
 class BookSwap(models.Model):
+    #       User (A) proposes a swap to User (B)
+    #       System (S) performs automatic actions
+    #
+    #       ┌─────────PROPOSED────────────┬────────────┐
+    #       │            │                │            │
+    #       A            B                S            B
+    #       │            │                │            │
+    #       ▼            ▼                ▼            ▼
+    #   CANCELLED     ACCEPTED───S───►RESCINDED    DECLINED
+    #                    │
+    #                    A
+    #                    │
+    #                    ▼
+    #                COMPLETED
+
     class Status(models.TextChoices):
         PROPOSED = "PROPOSED", "Proposed"
         CANCELLED = "CANCELLED", "Cancelled"
+        RESCINDED = "RESCINDED", "Rescinded"
         ACCEPTED = "ACCEPTED", "Accepted"
         COMPLETED = "COMPLETED", "Completed"
         DECLINED = "DECLINED", "Declined"
@@ -153,6 +174,8 @@ class BookSwap(models.Model):
         return False
 
     def complete(self, user: User):
+        logger.debug("User %s attempting to complete swap %d", user, self.id)
+
         if user != self.proposed_by:
             raise PermissionDenied("Only the proposer can complete this swap")
 
@@ -160,14 +183,59 @@ class BookSwap(models.Model):
             self.status = self.Status.COMPLETED
             self.save()
 
-            # TODO: have to do much more here...
-            # - soft delete books listed in this swap?
-            # - cancel any other swaps involving these listings?
-
             BookSwapEvent.objects.create(
                 swap=self,
                 user=user,
                 type=BookSwapEvent.Type.COMPLETE,
+            )
+
+            # mark all involved books as swapped
+            for book in self.offered_books.all():
+                book.status = BookListing.Status.SWAPPED
+                book.save()
+
+            for book in self.requested_books.all():
+                book.status = BookListing.Status.SWAPPED
+                book.save()
+
+            # cancel any other swaps involving these listings
+            book_in_swap = Q(offered_books__in=self.offered_books.all()) | Q(
+                requested_books__in=self.requested_books.all()
+            )
+            swap_open = Q(status=BookSwap.Status.PROPOSED) | Q(
+                status=BookSwap.Status.ACCEPTED
+            )
+            other_swaps = BookSwap.objects.filter(book_in_swap, swap_open).exclude(
+                id=self.id
+            )
+
+            for swap in other_swaps:
+                if swap.rescind():
+                    logger.info(
+                        "Rescinded swap %d due to completion of swap %d",
+                        swap.id,
+                        self.id,
+                    )
+                else:
+                    logger.warning(
+                        "Failed to rescind swap %d during completion of swap %d",
+                        swap.id,
+                        self.id,
+                    )
+
+            return True
+
+        return False
+
+    def rescind(self):
+        if self.status in [self.Status.PROPOSED, self.Status.ACCEPTED]:
+            self.status = self.Status.RESCINDED
+            self.save()
+
+            BookSwapEvent.objects.create(
+                swap=self,
+                user=None,
+                type=BookSwapEvent.Type.RESCIND,
             )
 
             return True
@@ -223,12 +291,13 @@ class BookSwapEvent(models.Model):
     class Type(models.TextChoices):
         PROPOSE = "PROPOSE", "Proposed"
         CANCEL = "CANCEL", "Cancelled"
+        RESCIND = "RESCIND", "Rescinded"
         ACCEPT = "ACCEPT", "Accepted"
         DECLINE = "DECLINE", "Declined"
         COMPLETE = "COMPLETE", "Completed"
 
     swap = models.ForeignKey(BookSwap, on_delete=models.CASCADE, related_name="events")
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     type = models.CharField(max_length=8, choices=Type.choices)
     created_at = models.DateTimeField(auto_now_add=True)
 

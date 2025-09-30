@@ -28,9 +28,18 @@
     <ol class="stack list-style:none padding:0 display:flex flex-direction:column align-items:center">
         {% for entry in swap.get_timeline %}
             {% if entry.type == 'event' %}
-                <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap
-                    <small class="display:block font-style:italic">{{ entry.item.created_at }}</small>
-                </li>
+                {% if entry.item.user %}
+                    <li class="box">{{ entry.item.user }} {{ entry.item.get_type_display|lower }} this swap
+                        <small class="display:block font-style:italic">{{ entry.item.created_at }}</small>
+                    </li>
+                {% else %}
+                    <li class="box">{{ entry.item.get_type_display }} automatically
+                        {% if entry.item.type == 'RESCIND' %}
+                            <small class="display:block">Some books are no longer available</small>
+                        {% endif %}
+                        <small class="display:block font-style:italic">{{ entry.item.created_at }}</small>
+                    </li>
+                {% endif %}
             {% elif entry.type == 'message' %}
                 <li 
                     speech-bubble 

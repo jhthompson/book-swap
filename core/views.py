@@ -347,10 +347,11 @@ def swap(request: HttpRequest, id: int):
 @login_required
 def swap_messages(request: HttpRequest, id: int):
     try:
-        swap = BookSwap.objects.get(id=id)
+        swap = BookSwap.objects.get(id=id, status=BookSwap.Status.ACCEPTED)
         if swap.proposed_by != request.user and swap.proposed_to != request.user:
             raise BookSwap.DoesNotExist
     except BookSwap.DoesNotExist:
+        messages.error(request, "Something went wrong.")
         return redirect("index")
 
     if request.method == "POST":
