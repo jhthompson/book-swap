@@ -66,6 +66,7 @@ class Book(models.Model):
 
 class BookListing(models.Model):
     class Status(models.TextChoices):
+        PENDING = "PENDING", "Pending"
         AVAILABLE = "AVAILABLE", "Available"
         SWAPPED = "SWAPPED", "Swapped"
         REMOVED = "REMOVED", "Removed"
@@ -74,7 +75,7 @@ class BookListing(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
-        max_length=9, choices=Status.choices, default=Status.AVAILABLE
+        max_length=9, choices=Status.choices, default=Status.PENDING
     )
 
     def __str__(self):

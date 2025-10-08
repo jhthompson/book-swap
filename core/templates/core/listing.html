@@ -8,6 +8,12 @@
             <h1 class="color-primary">{{ listing.book.title }}</h1>
             <h2>{{ listing.book.authors.all|join:", " }}</h2>
             <small class="display:block">Added {{ listing.created_at|timesince }} ago</small>
+            {% if listing.status == "PENDING" %}
+                <i style="color: orange;" class="bi bi-exclamation-circle"></i>
+                <small>
+                    Pending admin approval
+                </small>
+            {% endif %}
         </div>
     </div>
 

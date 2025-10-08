@@ -7,7 +7,7 @@
 - [x] Add continued messaging functionality... once "accepted", can message one another?
 - [ ] Edit profile
 - [ ] Add genres to listings
-- [ ] "Admin approval" step before listings are public?
+- [x] "Admin approval" step before listings are public?
 - [x] Tighter coupling to ISBNs for listings... can populate much better data based on that field
   - [ ] One search field to enter ISBN or title? Then can select based on results from OpenLibrary or Google?
   - [x] Upload picture of barcode? 

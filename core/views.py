@@ -49,7 +49,8 @@ def listings(request: HttpRequest):
     context = {}
 
     context["listings"] = BookListing.objects.filter(
-        owner=request.user, status=BookListing.Status.AVAILABLE
+        owner=request.user,
+        status__in=[BookListing.Status.AVAILABLE, BookListing.Status.PENDING],
     ).order_by("-created_at")
 
     return render(request, "core/listings.html", context)
@@ -173,7 +174,9 @@ def listing(request: HttpRequest, id: int):
 
     try:
         context["listing"] = BookListing.objects.get(
-            id=id, owner=request.user, status=BookListing.Status.AVAILABLE
+            id=id,
+            owner=request.user,
+            status__in=[BookListing.Status.AVAILABLE, BookListing.Status.PENDING],
         )
     except BookListing.DoesNotExist:
         return redirect("listings")

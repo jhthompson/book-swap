@@ -11,9 +11,17 @@
                 <a href="{% url 'listing' listing.id %}">{{ listing.book.title }}</a>
             </h2>
             <p>{{ listing.book.authors.all|join:", " }}</p>
-            <small class="display:block">
-                Listed on {{ listing.created_at|date:"F j, Y" }}
-            </small>
+
+            {% if listing.status == "PENDING" %}
+                <i style="color: orange;" class="bi bi-exclamation-circle"></i>
+                <small>
+                    Pending admin approval
+                </small>
+            {% elif listing.status == "AVAILABLE" %}
+                <small class="display:block">
+                    Listed on {{ listing.created_at|date:"F j, Y" }}
+                </small>
+            {% endif %}
         </div>
     </li>
 {% endfor %}
