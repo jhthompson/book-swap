@@ -17,10 +17,10 @@
         {% for listing in listings %}
             <li class="list-style:none">
                 <article class="book-card box stack">
-                    <img src="{{ listing.cover_photo.url }}" style="max-width: 100px"/>
+                    <img src="{{ listing.book.cover_url_medium }}" style="max-width: 100px"/>
                     <div class="margin-block-start:s-2">
-                        <h3 class="margin:0">{{ listing.title }}</h3>
-                        <p class="margin:0">{{ listing.author }}</p>
+                        <h3 class="margin:0">{{ listing.book.title }}</h3>
+                        <p class="margin:0">{{ listing.book.authors.all|join:", " }}</p>
                         <small class="display:block"><i class="bi bi-geo-alt margin-inline-end:s-3"></i>{{ listing.get_city }}</small>
                         <a class="button margin-block-start:s-2 width:100" href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">
                             <i class="bi bi-arrow-left-right margin-inline-end:s-2"></i>Swap

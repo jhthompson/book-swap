@@ -3,6 +3,7 @@ from location_field.forms.spatial import LocationField
 
 from django import forms
 from django.contrib.gis.geos import Point
+from django.core.exceptions import ValidationError
 
 from core.models import BookListing, UserProfile
 
@@ -27,35 +28,46 @@ class BookSwapSignupForm(forms.Form):
         profile.save()
 
 
-class BookListingISBNForm(forms.Form):
-    isbn = forms.CharField(
+class NewBookListingForm(forms.Form):
+    barcode = forms.ImageField(
         required=False,
-        label="ISBN",
-        help_text="An International Standard Book Number (ISBN) is a 10 or 13-digit number that uniquely identifies books. If you don't know the ISBN, you can leave this blank.",  # noqa: E501
-        min_length=10,
-        validators=[ISBNValidator],
-    )
-
-
-class BookListingDetailsForm(forms.Form):
-    title = forms.CharField(max_length=255)
-    author = forms.CharField(max_length=255)
-    cover_photo = forms.ImageField(
         widget=forms.ClearableFileInput(
             attrs={"capture": "environment", "accept": "image/*"}
         ),
     )
 
+    isbn = forms.CharField(
+        required=False,
+        label="ISBN",
+        min_length=10,
+        validators=[ISBNValidator],
+    )
 
-class BookListingForm(forms.ModelForm):
-    class Meta:
-        model = BookListing
-        fields = ["title", "author", "cover_photo", "isbn"]
-        widgets = {
-            "cover_photo": forms.ClearableFileInput(
-                attrs={"capture": "environment", "accept": "image/*"}
-            ),
-        }
+    def clean(self):
+        cleaned_data = super().clean()
+        barcode = cleaned_data.get("barcode")
+        isbn = cleaned_data.get("isbn")
+
+        if not barcode and not isbn:
+            raise ValidationError(
+                "Please provide either an image of the barcode or an ISBN."
+            )
+
+
+class NewBookListingFromIsbnConfirmationForm(forms.Form):
+    """
+    Holder form populated from an OpenLibrary search.
+    """
+
+    title = forms.CharField(widget=forms.HiddenInput(), max_length=255)
+    isbn = forms.CharField(widget=forms.HiddenInput(), max_length=13)
+
+    openlibrary_author_names = forms.CharField(
+        widget=forms.HiddenInput(), max_length=255
+    )
+    openlibrary_author_ids = forms.CharField(widget=forms.HiddenInput(), max_length=255)
+    openlibrary_edition_id = forms.CharField(widget=forms.HiddenInput(), max_length=255)
+    openlibrary_work_id = forms.CharField(widget=forms.HiddenInput(), max_length=255)
 
 
 class BookListingSelectionFormSet(forms.BaseFormSet):

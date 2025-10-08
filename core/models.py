@@ -25,19 +25,52 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 
+class Author(models.Model):
+    name = models.CharField(max_length=255)
+    openlibrary_author_id = models.CharField(
+        max_length=50,
+        unique=True,
+        null=True,
+        blank=True,
+        verbose_name="OpenLibrary Author ID",
+    )
+
+    def __str__(self):
+        return self.name
+
+
+class Book(models.Model):
+    title = models.CharField(max_length=255)
+    isbn = ISBNField(unique=True, null=True, blank=True)
+    openlibrary_edition_id = models.CharField(
+        max_length=50,
+        unique=True,
+        null=True,
+        blank=True,
+        verbose_name="OpenLibrary Edition ID",
+    )
+    openlibrary_work_id = models.CharField(
+        max_length=50, null=True, blank=True, verbose_name="OpenLibrary Work ID"
+    )
+    authors = models.ManyToManyField(Author)
+
+    def __str__(self):
+        return self.title
+
+    def cover_url_small(self):
+        return f"http://covers.openlibrary.org/b/isbn/{self.isbn}-S.jpg"
+
+    def cover_url_medium(self):
+        return f"http://covers.openlibrary.org/b/isbn/{self.isbn}-M.jpg"
+
+
 class BookListing(models.Model):
     class Status(models.TextChoices):
         AVAILABLE = "AVAILABLE", "Available"
         SWAPPED = "SWAPPED", "Swapped"
         REMOVED = "REMOVED", "Removed"
 
-    # user provided
-    title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
-    cover_photo = models.FileField(upload_to="book_listing_covers/")
-    isbn = ISBNField(blank=True)
-
-    # system managed
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
@@ -45,7 +78,7 @@ class BookListing(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.book.title
 
     def get_city(self):
         return self.owner.userprofile.city

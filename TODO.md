@@ -8,8 +8,13 @@
 - [ ] Edit profile
 - [ ] Add genres to listings
 - [ ] "Admin approval" step before listings are public?
-- [ ] Tighter coupling to ISBNs for listings... can populate much better data based on that field
+- [x] Tighter coupling to ISBNs for listings... can populate much better data based on that field
   - [ ] One search field to enter ISBN or title? Then can select based on results from OpenLibrary or Google?
-  - [ ] Upload picture of barcode? 
+  - [x] Upload picture of barcode? 
 - [ ] Add a "wishlist" of books you want, and notify when those become available
   - [ ] Probably want same search by ISBN or title to make sure matches are exact
+
+- [ ] Add error handling during listing flow
+  - [ ] barcode image detection fails?
+  - [ ] ISBN lookup on OpenLibrary fails? 
+  - [ ] what if there is no cover image on OpenLibrary? Should they have to take a picture?

@@ -2,12 +2,24 @@ from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
 
 from core.models import (
+    Author,
+    Book,
     BookListing,
     BookSwap,
     BookSwapEvent,
     BookSwapMessage,
     UserProfile,
 )
+
+
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Book)
+class BookAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(BookListing)

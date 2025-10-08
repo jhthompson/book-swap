@@ -1,16 +1,18 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<div class="stack center" style="--space: 1rem;">
-    <h1 class="text-align:center color-primary">{{ listing.title }}</h1>
-    <div>
-        <p class="text-align:center">{{ listing.author }}</p>
-        <small class="display:block text-align:center">Added {{ listing.created_at|timesince }} ago</small>
+<div class="stack center">
+    <div style="display: flex; gap: var(--s0);">
+        <img src="{{ listing.book.cover_url_medium }}" alt="Cover of {{ listing.book.title }}" style="max-width: 300px;" />
+        <div>
+            <h1 class="color-primary">{{ listing.book.title }}</h1>
+            <h2>{{ listing.book.authors.all|join:", " }}</h2>
+            <small class="display:block">Added {{ listing.created_at|timesince }} ago</small>
+        </div>
     </div>
-    <div class="display:flex justify-content:center gap:s0">
-        <a class="button" href="{% url 'edit_listing' listing.id %}">Edit Listing</a>
+
+    <div class="display:flex justify-content:flex-end gap:s0">
         <a class="button" href="{% url 'delete_listing' listing.id %}">Delete Listing</a>
     </div>
-    <img class="center" src="{{ listing.cover_photo.url }}" alt="Cover of {{ listing.title }}" style="max-width: 300px;">
 </div>
 {% endblock main %}
