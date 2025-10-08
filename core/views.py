@@ -223,8 +223,8 @@ def swaps(request: HttpRequest):
     context["pending_swaps"] = involved_pending_swaps.order_by(
         "-created_at"
     ).prefetch_related(
-        "requested_books",
-        "offered_books",
+        "requested_listings",
+        "offered_listings",
         Prefetch(
             "events",
             queryset=BookSwapEvent.objects.order_by("-created_at").select_related(
@@ -237,8 +237,8 @@ def swaps(request: HttpRequest):
     context["closed_swaps"] = involved_closed_swaps.order_by(
         "-created_at"
     ).prefetch_related(
-        "requested_books",
-        "offered_books",
+        "requested_listings",
+        "offered_listings",
         Prefetch(
             "events",
             queryset=BookSwapEvent.objects.order_by("-created_at").select_related(
@@ -285,8 +285,8 @@ def new_swap(request: HttpRequest):
                 proposed_by=proposed_by,
                 proposed_to=proposed_to,
             )
-            book_swap.offered_books.set(offered_book_listings)
-            book_swap.requested_books.set(requested_book_listings)
+            book_swap.offered_listings.set(offered_book_listings)
+            book_swap.requested_listings.set(requested_book_listings)
             book_swap.save()
 
             BookSwapEvent.objects.create(
@@ -336,12 +336,12 @@ def swap(request: HttpRequest, id: int):
         return redirect("index")
 
     if request.user == swap.proposed_by:
-        context["your_books"] = swap.offered_books.all()
-        context["their_books"] = swap.requested_books.all()
+        context["your_listings"] = swap.offered_listings.all()
+        context["their_listings"] = swap.requested_listings.all()
         context["them"] = swap.proposed_to
     elif request.user == swap.proposed_to:
-        context["your_books"] = swap.requested_books.all()
-        context["their_books"] = swap.offered_books.all()
+        context["your_listings"] = swap.requested_listings.all()
+        context["their_listings"] = swap.offered_listings.all()
         context["them"] = swap.proposed_by
 
     context["you"] = request.user

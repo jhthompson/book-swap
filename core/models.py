@@ -125,9 +125,11 @@ class BookSwap(models.Model):
         User, on_delete=models.CASCADE, related_name="proposed_to"
     )
 
-    offered_books = models.ManyToManyField(BookListing, related_name="offered_books")
-    requested_books = models.ManyToManyField(
-        BookListing, related_name="requested_books"
+    offered_listings = models.ManyToManyField(
+        BookListing, related_name="offered_listings"
+    )
+    requested_listings = models.ManyToManyField(
+        BookListing, related_name="requested_listings"
     )
 
     status = models.CharField(
@@ -152,8 +154,8 @@ class BookSwap(models.Model):
                     {
                         "proposed_by": self.proposed_by,
                         "swap_url": request.build_absolute_uri(self.get_absolute_url()),
-                        "offered_books": self.offered_books.all(),
-                        "requested_books": self.requested_books.all(),
+                        "offered_listings": self.offered_listings.all(),
+                        "requested_listings": self.requested_listings.all(),
                     },
                 )
                 recipient = self.proposed_to
@@ -174,8 +176,8 @@ class BookSwap(models.Model):
                     {
                         "proposed_to": self.proposed_to,
                         "swap_url": request.build_absolute_uri(self.get_absolute_url()),
-                        "offered_books": self.offered_books.all(),
-                        "requested_books": self.requested_books.all(),
+                        "offered_listings": self.offered_listings.all(),
+                        "requested_listings": self.requested_listings.all(),
                     },
                 )
                 recipient = self.proposed_by
@@ -224,17 +226,17 @@ class BookSwap(models.Model):
             )
 
             # mark all involved books as swapped
-            for book in self.offered_books.all():
-                book.status = BookListing.Status.SWAPPED
-                book.save()
+            for offered_listing in self.offered_listings.all():
+                offered_listing.status = BookListing.Status.SWAPPED
+                offered_listing.save()
 
-            for book in self.requested_books.all():
-                book.status = BookListing.Status.SWAPPED
-                book.save()
+            for requested_listing in self.requested_listings.all():
+                requested_listing.status = BookListing.Status.SWAPPED
+                requested_listing.save()
 
             # cancel any other swaps involving these listings
-            book_in_swap = Q(offered_books__in=self.offered_books.all()) | Q(
-                requested_books__in=self.requested_books.all()
+            book_in_swap = Q(offered_listings__in=self.offered_listings.all()) | Q(
+                requested_listings__in=self.requested_listings.all()
             )
             swap_open = Q(status=BookSwap.Status.PROPOSED) | Q(
                 status=BookSwap.Status.ACCEPTED

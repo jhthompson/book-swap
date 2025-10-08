@@ -10,13 +10,13 @@
             {% for swap in pending_swaps %}
                 <li class="box list-style:none">
                     <a href="{% url 'swap' swap.id %}">
-                        {% for book in swap.offered_books.all %}
-                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% for listing in swap.offered_listings.all %}
+                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
 
                         <i class="bi bi-arrow-left-right"></i>
-                        {% for book in swap.requested_books.all %}
-                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% for listing in swap.requested_listings.all %}
+                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </a>
 
@@ -40,13 +40,13 @@
             {% for swap in closed_swaps %}
                 <li class="box list-style:none">
                     <a href="{% url 'swap' swap.id %}">
-                        {% for book in swap.requested_books.all %}
-                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% for listing in swap.requested_listings.all %}
+                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
 
                         <i class="bi bi-arrow-left-right"></i>
-                        {% for book in swap.offered_books.all %}
-                            {{ book.title }}{% if not forloop.last %}, {% endif %}
+                        {% for listing in swap.offered_listings.all %}
+                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </a>
 
