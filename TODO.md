@@ -6,6 +6,9 @@
 - [x] Improve style of signup & login forms (likely override allauth templates)
 - [x] Add continued messaging functionality... once "accepted", can message one another?
 - [ ] Edit profile
+  - [ ] Change city
+  - [ ] Change location
+  - [ ] Update/add email 
 - [ ] Add genres to listings
 - [ ] "Admin approval" step before listings are public?
   - [x] Create listings with PENDING state
