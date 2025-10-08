@@ -7,7 +7,9 @@
 - [x] Add continued messaging functionality... once "accepted", can message one another?
 - [ ] Edit profile
 - [ ] Add genres to listings
-- [x] "Admin approval" step before listings are public?
+- [ ] "Admin approval" step before listings are public?
+  - [x] Create listings with PENDING state
+  - [ ] Some sort of page to view all PENDING listings (i.e. preview image, title, authors) and approve or deny them 
 - [x] Tighter coupling to ISBNs for listings... can populate much better data based on that field
   - [ ] One search field to enter ISBN or title? Then can select based on results from OpenLibrary or Google?
   - [x] Upload picture of barcode? 
