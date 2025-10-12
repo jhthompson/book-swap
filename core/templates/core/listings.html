@@ -1,29 +1,33 @@
 {% extends "core/base.html" %}
 
 {% block main %}
-<h1 class="center text-align:center color-primary">Your Listings</h1>
-<ul class="center stack padding:0">
-{% for listing in listings %}
-    <li class="box list-style:none" style="display: flex; gap: var(--s0)">
-        <img src="{{ listing.book.cover_url_medium }}" alt="Cover for {{ listing.book.title }}" style="width:100px;"></img>
-        <div>
-            <h2>
-                <a href="{% url 'listing' listing.id %}">{{ listing.book.title }}</a>
-            </h2>
-            <p>{{ listing.book.authors.all|join:", " }}</p>
+<div class="stack">
+    <h1 class="center text-align:center color-primary">Your Listings</h1>
+    <a class="center button" href="{% url 'new_listing_isbn_prompt' %}">Add a new listing</a>
 
-            {% if listing.status == "PENDING" %}
-                <i style="color: orange;" class="bi bi-exclamation-circle"></i>
-                <small>
-                    Pending admin approval
-                </small>
-            {% elif listing.status == "AVAILABLE" %}
-                <small class="display:block">
-                    Listed on {{ listing.created_at|date:"F j, Y" }}
-                </small>
-            {% endif %}
-        </div>
-    </li>
-{% endfor %}
-</ul>
+    <ul class="center stack padding:0">
+    {% for listing in listings %}
+        <li class="box list-style:none" style="display: flex; gap: var(--s0)">
+            <img src="{{ listing.cover.url }}" alt="Cover for {{ listing.title }}" style="width:100px;"></img>
+            <div>
+                <h2>
+                    <a href="{% url 'listing' listing.id %}">{{ listing.title }}</a>
+                </h2>
+                <p>{{ listing.authors }}</p>
+
+                {% if listing.status == "PENDING" %}
+                    <i style="color: orange;" class="bi bi-exclamation-circle"></i>
+                    <small>
+                        Pending admin approval
+                    </small>
+                {% elif listing.status == "AVAILABLE" %}
+                    <small class="display:block">
+                        Listed on {{ listing.created_at|date:"F j, Y" }}
+                    </small>
+                {% endif %}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
 {% endblock main %}

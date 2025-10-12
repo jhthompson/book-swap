@@ -2,14 +2,13 @@
 
 {% block main %}
 <h1 class="center text-align:center color-primary">New Listing</h1>
-<p class="center">
-    Take a picture of your book's barcode or manually enter its ISBN.
-</p>
+
+<p class="center">Finalize the details below before submitting your listing.</p>
+
 <form class="center stack" enctype="multipart/form-data" method="post">
     {% csrf_token %}
     {{ form }}
-    <div class="display:flex justify-content:space-between align-items:center">
-        <a href="{% url 'new_listing' %}">No ISBN?</a> <!-- TODO: implement manual entry -->
+    <div class="display:flex justify-content:flex-end align-items:center">
         <input class="button" type="submit" value="Submit">
     </div>
 </form>

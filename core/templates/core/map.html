@@ -53,7 +53,7 @@ function fetchListings() {
                     popupAnchor:  [0, -30]
                 });
                 const marker = L.marker([listing.location.lat, listing.location.lng], { icon: coverIcon });
-                marker.bindPopup(`<b>${listing.title}</b><br>${listing.author}<br><a href="/swaps/new?proposed_to=${ listing.owner.id }&requested_book_listing_ids=${ listing.id }">Propose Swap</a>`);
+                marker.bindPopup(`<b>${listing.title}</b><br>${listing.authors}<br><a href="/swaps/new?proposed_to=${ listing.owner.id }&requested_book_listing_ids=${ listing.id }">Propose Swap</a>`);
                 markers.addLayer(marker);
             });
         });

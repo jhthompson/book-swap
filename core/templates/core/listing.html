@@ -2,11 +2,11 @@
 
 {% block main %}
 <div class="stack center">
-    <div style="display: flex; gap: var(--s0);">
-        <img src="{{ listing.book.cover_url_medium }}" alt="Cover of {{ listing.book.title }}" style="max-width: 300px;" />
+    <div class="listing-container">
+        <img src="{{ listing.cover.url }}" alt="Cover of {{ listing.title }}" style="max-width: 30%; align-self: flex-start;" />
         <div>
-            <h1 class="color-primary">{{ listing.book.title }}</h1>
-            <h2>{{ listing.book.authors.all|join:", " }}</h2>
+            <h1 class="color-primary">{{ listing.title }}</h1>
+            <h2>{{ listing.authors }}</h2>
             <small class="display:block">Added {{ listing.created_at|timesince }} ago</small>
             {% if listing.status == "PENDING" %}
                 <i style="color: orange;" class="bi bi-exclamation-circle"></i>

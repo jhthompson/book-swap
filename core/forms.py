@@ -28,7 +28,7 @@ class BookSwapSignupForm(forms.Form):
         profile.save()
 
 
-class NewBookListingForm(forms.Form):
+class NewBookListingIsbnPromptForm(forms.Form):
     barcode = forms.ImageField(
         required=False,
         widget=forms.ClearableFileInput(
@@ -54,20 +54,37 @@ class NewBookListingForm(forms.Form):
             )
 
 
-class NewBookListingFromIsbnConfirmationForm(forms.Form):
-    """
-    Holder form populated from an OpenLibrary search.
-    """
-
-    title = forms.CharField(widget=forms.HiddenInput(), max_length=255)
-    isbn = forms.CharField(widget=forms.HiddenInput(), max_length=13)
-
-    openlibrary_author_names = forms.CharField(
-        widget=forms.HiddenInput(), max_length=255
+class NewBookListingForm(forms.Form):
+    # user editable
+    title = forms.CharField(max_length=255)
+    isbn = forms.CharField(
+        label="ISBN",
+        max_length=13,
+        required=False,
+        validators=[ISBNValidator],
     )
-    openlibrary_author_ids = forms.CharField(widget=forms.HiddenInput(), max_length=255)
-    openlibrary_edition_id = forms.CharField(widget=forms.HiddenInput(), max_length=255)
-    openlibrary_work_id = forms.CharField(widget=forms.HiddenInput(), max_length=255)
+    authors = forms.CharField(
+        max_length=255,
+        help_text="Enter the author's name(s), separated by commas if multiple.",
+    )
+    cover = forms.ImageField(
+        label="Picture of the book's cover",
+        widget=forms.ClearableFileInput(attrs={"accept": "image/*"}),
+    )
+
+    # populated from OpenLibrary API lookup
+    openlibrary_author_names = forms.CharField(
+        widget=forms.HiddenInput(), max_length=255, required=False
+    )
+    openlibrary_author_ids = forms.CharField(
+        widget=forms.HiddenInput(), max_length=255, required=False
+    )
+    openlibrary_edition_id = forms.CharField(
+        widget=forms.HiddenInput(), max_length=255, required=False
+    )
+    openlibrary_work_id = forms.CharField(
+        widget=forms.HiddenInput(), max_length=255, required=False
+    )
 
 
 class BookListingSelectionFormSet(forms.BaseFormSet):

@@ -7,7 +7,12 @@ urlpatterns = [
     path("listings", views.listings, name="listings"),
     path("listings/new", views.new_listing, name="new_listing"),
     path(
-        "listings/new/<str:isbn>",
+        "listings/new/isbn",
+        views.new_listing_isbn_prompt,
+        name="new_listing_isbn_prompt",
+    ),
+    path(
+        "listings/new/isbn/<str:isbn>",
         views.new_listing_from_isbn,
         name="new_listing_from_isbn",
     ),

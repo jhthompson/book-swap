@@ -25,43 +25,20 @@ class UserProfile(models.Model):
         return f"{self.user.username}'s Profile"
 
 
-class Author(models.Model):
+class OpenLibraryAuthor(models.Model):
+    class Meta:
+        verbose_name = "OpenLibrary author"
+        verbose_name_plural = "OpenLibrary authors"
+
     name = models.CharField(max_length=255)
     openlibrary_author_id = models.CharField(
         max_length=50,
         unique=True,
-        null=True,
-        blank=True,
         verbose_name="OpenLibrary Author ID",
     )
 
     def __str__(self):
         return self.name
-
-
-class Book(models.Model):
-    title = models.CharField(max_length=255)
-    isbn = ISBNField(unique=True, null=True, blank=True)
-    openlibrary_edition_id = models.CharField(
-        max_length=50,
-        unique=True,
-        null=True,
-        blank=True,
-        verbose_name="OpenLibrary Edition ID",
-    )
-    openlibrary_work_id = models.CharField(
-        max_length=50, null=True, blank=True, verbose_name="OpenLibrary Work ID"
-    )
-    authors = models.ManyToManyField(Author)
-
-    def __str__(self):
-        return self.title
-
-    def cover_url_small(self):
-        return f"http://covers.openlibrary.org/b/isbn/{self.isbn}-S.jpg"
-
-    def cover_url_medium(self):
-        return f"http://covers.openlibrary.org/b/isbn/{self.isbn}-M.jpg"
 
 
 class BookListing(models.Model):
@@ -71,21 +48,48 @@ class BookListing(models.Model):
         SWAPPED = "SWAPPED", "Swapped"
         REMOVED = "REMOVED", "Removed"
 
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    # main data
+    title = models.CharField(max_length=255)
+    isbn = ISBNField(null=True, blank=True)
+    authors = models.CharField(max_length=255)
+    cover = models.ImageField(upload_to="book_listing_covers/")
+
+    # metadata
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
-        max_length=9, choices=Status.choices, default=Status.PENDING
+        max_length=9,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+
+    # OpenLibrary data (if available)
+    openlibrary_edition_id = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        verbose_name="OpenLibrary Edition ID",
+    )
+    openlibrary_work_id = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        verbose_name="OpenLibrary Work ID",
+    )
+    openlibrary_authors = models.ManyToManyField(
+        OpenLibraryAuthor,
+        blank=True,
+        verbose_name="OpenLibrary Authors",
     )
 
     def __str__(self):
-        return self.book.title
+        return self.title
 
     def get_city(self):
         return self.owner.userprofile.city
 
     def remove(self):
-        if self.status == self.Status.AVAILABLE:
+        if self.status in [self.Status.AVAILABLE, self.Status.PENDING]:
             self.status = self.Status.REMOVED
             self.save()
 

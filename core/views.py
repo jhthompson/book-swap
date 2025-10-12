@@ -17,10 +17,10 @@ from django.shortcuts import redirect, render
 from core.forms import (
     BookListingSelectionForm,
     BookListingSelectionFormSet,
+    NewBookListingIsbnPromptForm,
     NewBookListingForm,
-    NewBookListingFromIsbnConfirmationForm,
 )
-from core.models import Author, Book, BookListing, BookSwap, BookSwapEvent
+from core.models import BookListing, BookSwap, BookSwapEvent, OpenLibraryAuthor
 from core.open_library import (
     get_book_details_from_openlibrary_search_results,
     search_openlibrary_by_isbn,
@@ -57,9 +57,9 @@ def listings(request: HttpRequest):
 
 
 @login_required
-def new_listing(request: HttpRequest):
+def new_listing_isbn_prompt(request: HttpRequest):
     if request.method == "POST":
-        form = NewBookListingForm(request.POST, request.FILES)
+        form = NewBookListingIsbnPromptForm(request.POST, request.FILES)
 
         if form.is_valid():
             form_isbn = form.cleaned_data.get("isbn")
@@ -70,7 +70,7 @@ def new_listing(request: HttpRequest):
             return redirect("new_listing_from_isbn", isbn=isbn)
 
     else:
-        form = NewBookListingForm()
+        form = NewBookListingIsbnPromptForm()
 
     return render(request, "core/new_listing.html", {"form": form})
 
@@ -92,43 +92,48 @@ def extract_isbn_from_barcode_image(barcode) -> str | None:
 
 @login_required
 def new_listing_from_isbn(request: HttpRequest, isbn: str):
-    # TODO: look up book details from OpenLibrary... if successful, redirect to confirmation page
-    # if failure, redirect to manual entry page
-
     if request.method == "POST":
-        form = NewBookListingFromIsbnConfirmationForm(request.POST, request.FILES)
+        form = NewBookListingForm(request.POST, request.FILES)
 
         if form.is_valid():
             title = form.cleaned_data.get("title")
             isbn = form.cleaned_data.get("isbn")
-            openlibrary_edition_id = form.cleaned_data.get("openlibrary_edition_id")
-            openlibrary_work_id = form.cleaned_data.get("openlibrary_work_id")
-            author_ids = form.cleaned_data.get("openlibrary_author_ids").split(",")
-            author_names = form.cleaned_data.get("openlibrary_author_names").split(",")
+            authors = form.cleaned_data.get("authors")
+            cover = request.FILES["cover"]
 
-            # Authors
-            authors = []
-            for ol_author_id, name in zip(author_ids, author_names, strict=True):
-                author, created = Author.objects.get_or_create(
+            openlibrary_edition_id = form.cleaned_data.get("openlibrary_edition_id", "")
+            openlibrary_work_id = form.cleaned_data.get("openlibrary_work_id", "")
+            openlibrary_author_ids = form.cleaned_data.get(
+                "openlibrary_author_ids", ""
+            ).split(",")
+            openlibrary_author_names = form.cleaned_data.get(
+                "openlibrary_author_names", ""
+            ).split(",")
+
+            # OpenLibrary Authors
+            openlibrary_authors = []
+            for ol_author_id, ol_author_name in zip(
+                openlibrary_author_ids, openlibrary_author_names, strict=True
+            ):
+                openlibrary_author, created = OpenLibraryAuthor.objects.get_or_create(
                     openlibrary_author_id=ol_author_id
                 )
-                author.name = name
-                author.save()
-                authors.append(author)
-
-            # Book
-            book, created = Book.objects.get_or_create(isbn=isbn)
-            book.title = title
-            book.openlibrary_edition_id = openlibrary_edition_id
-            book.openlibrary_work_id = openlibrary_work_id
-            book.authors.set(authors)
-            book.save()
+                openlibrary_author.name = ol_author_name
+                openlibrary_author.save()
+                openlibrary_authors.append(openlibrary_author)
 
             # BookListing
             listing = BookListing.objects.create(
-                book=book,
+                title=title,
+                isbn=isbn,
+                authors=authors,
+                cover=cover,
                 owner=request.user,
+                openlibrary_edition_id=openlibrary_edition_id,
+                openlibrary_work_id=openlibrary_work_id,
             )
+            listing.openlibrary_authors.set(openlibrary_authors)
+            listing.save()
 
             messages.success(request, "Book listing created.")
             return redirect("listing", id=listing.id)
@@ -139,30 +144,64 @@ def new_listing_from_isbn(request: HttpRequest, isbn: str):
             ol_search_data
         )
 
-        form = NewBookListingFromIsbnConfirmationForm(
-            {
+        form = NewBookListingForm(
+            initial={
+                # Main fields, pre-filled if OpenLibrary lookup was successful
                 "isbn": isbn,
                 "title": ol_book_details.get("title", ""),
-                "openlibrary_edition_id": ol_book_details.get(
-                    "openlibrary_edition_id", ""
-                ),
-                "openlibrary_work_id": ol_book_details.get("openlibrary_work_id", ""),
+                "authors": ", ".join(ol_book_details.get("author_names", [])),
+                # Hidden fields for OpenLibrary data
+                "openlibrary_edition_title": ol_book_details.get("title", ""),
+                "openlibrary_edition_id": ol_book_details.get("edition_id", ""),
+                "openlibrary_work_id": ol_book_details.get("work_id", ""),
                 "openlibrary_author_names": ",".join(
-                    ol_book_details.get("openlibrary_author_names", [])
+                    ol_book_details.get("author_names", [])
                 ),
                 "openlibrary_author_ids": ",".join(
-                    ol_book_details.get("openlibrary_author_ids", [])
+                    ol_book_details.get("author_ids", [])
                 ),
             }
         )
 
     return render(
         request,
-        "core/new_listing_from_isbn.html",
+        "core/new_listing.html",
         {
-            "ol_cover_url": f"http://covers.openlibrary.org/b/isbn/{isbn}-M.jpg",
-            "title": form.data.get("title", ""),
-            "author_names": form.data.get("openlibrary_author_names", "").split(","),
+            "form": form,
+        },
+    )
+
+
+@login_required
+def new_listing(request: HttpRequest):
+    if request.method == "POST":
+        form = NewBookListingForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            title = form.cleaned_data.get("title")
+            isbn = form.cleaned_data.get("isbn")
+            authors = form.cleaned_data.get("authors")
+            cover = request.FILES["cover"]
+
+            listing = BookListing.objects.create(
+                title=title,
+                isbn=isbn,
+                authors=authors,
+                cover=cover,
+                owner=request.user,
+            )
+            listing.save()
+
+            messages.success(request, "Book listing created.")
+            return redirect("listing", id=listing.id)
+
+    else:
+        form = NewBookListingForm()
+
+    return render(
+        request,
+        "core/new_listing.html",
+        {
             "form": form,
         },
     )
@@ -188,7 +227,9 @@ def listing(request: HttpRequest, id: int):
 def delete_listing(request: HttpRequest, id: int):
     try:
         listing = BookListing.objects.get(
-            id=id, owner=request.user, status=BookListing.Status.AVAILABLE
+            id=id,
+            owner=request.user,
+            status__in=[BookListing.Status.AVAILABLE, BookListing.Status.PENDING],
         )
     except BookListing.DoesNotExist:
         return redirect("listings")
@@ -505,9 +546,9 @@ def book_listings_api(request: HttpRequest):
     results = [
         {
             "id": listing.id,
-            "title": listing.book.title,
-            "author": ", ".join(author.name for author in listing.book.authors.all()),
-            "cover": listing.book.cover_url_small(),
+            "title": listing.title,
+            "authors": listing.authors,
+            "cover": listing.cover.url,
             "location": {
                 "lat": listing.owner.userprofile.location.y,
                 "lng": listing.owner.userprofile.location.x,
@@ -517,7 +558,7 @@ def book_listings_api(request: HttpRequest):
                 "username": listing.owner.username,
             },
         }
-        for listing in listings.select_related("book", "owner__userprofile")
+        for listing in listings.select_related("owner__userprofile")
     ]
 
     return JsonResponse({"results": results})

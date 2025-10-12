@@ -11,12 +11,12 @@
                 <li class="box list-style:none">
                     <a href="{% url 'swap' swap.id %}">
                         {% for listing in swap.offered_listings.all %}
-                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
+                            {{ listing.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
 
                         <i class="bi bi-arrow-left-right"></i>
                         {% for listing in swap.requested_listings.all %}
-                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
+                            {{ listing.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </a>
 
@@ -41,12 +41,12 @@
                 <li class="box list-style:none">
                     <a href="{% url 'swap' swap.id %}">
                         {% for listing in swap.requested_listings.all %}
-                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
+                            {{ listing.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
 
                         <i class="bi bi-arrow-left-right"></i>
                         {% for listing in swap.offered_listings.all %}
-                            {{ listing.book.title }}{% if not forloop.last %}, {% endif %}
+                            {{ listing.title }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
                     </a>
 

@@ -1,6 +1,9 @@
 import json
+import logging
 import urllib
 from typing import TypedDict
+
+logger = logging.getLogger(__name__)
 
 
 class EditionDict(TypedDict, total=False):
@@ -84,13 +87,18 @@ def get_book_details_from_openlibrary_search_results(
 
     first_doc = search_data["docs"][0]
 
+    title = first_doc.get("title", "")
+    author_names = first_doc.get("author_name", [])
+    author_ids = first_doc.get("author_key", [])
+    edition_id = (
+        first_doc.get("editions", {}).get("docs", [{}])[0].get("key", "").split("/")[-1]
+    )
+    work_id = first_doc.get("key", "").split("/")[-1]
+
     return {
-        "title": first_doc.get("title"),
-        "openlibrary_author_names": first_doc.get("author_name", []),
-        "openlibrary_author_ids": first_doc.get("author_key", []),
-        "openlibrary_edition_id": first_doc.get("editions", {})
-        .get("docs", [{}])[0]
-        .get("key", "")
-        .split("/")[-1],  # noqa: E501
-        "openlibrary_work_id": first_doc.get("key").split("/")[-1],
+        "title": title,
+        "author_names": author_names,
+        "author_ids": author_ids,
+        "edition_id": edition_id,
+        "work_id": work_id,
     }

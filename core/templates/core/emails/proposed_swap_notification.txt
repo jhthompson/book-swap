@@ -1,10 +1,10 @@
 {{ proposed_by.username }} proposed a book swap:
                 
 Your books:
-{% for listing in requested_listings %}- {{ listing.book.title }} by {{ listing.book.authors.all|join:", " }}
+{% for listing in requested_listings %}- {{ listing.title }} by {{ listing.authors }}
 {% endfor %}
 {{ proposed_by.username }}'s books:
-{% for listing in offered_listings %}- {{ listing.book.title }} by {{ listing.book.authors.all|join:", " }}
+{% for listing in offered_listings %}- {{ listing.title }} by {{ listing.authors }}
 {% endfor %}
 Accept or decline the swap here:
 {{ swap_url }}
