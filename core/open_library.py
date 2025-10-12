@@ -73,10 +73,19 @@ class SearchResponseDict(TypedDict, total=False):
 def search_openlibrary_by_isbn(isbn: str) -> SearchResponseDict:
     url = f"https://openlibrary.org/search.json?q=isbn:{isbn}&fields=title,key,author_key,author_name,editions"
 
-    with urllib.request.urlopen(url) as response:
-        data = json.loads(response.read().decode())
+    try:
+        with urllib.request.urlopen(url) as response:
+            data = json.loads(response.read().decode())
+        return SearchResponseDict(**data)
 
-    return SearchResponseDict(**data)
+    except urllib.error.URLError:
+        logger.exception(f"Network error in OpenLibrary search for ISBN {isbn}")
+    except json.JSONDecodeError:
+        logger.exception(f"JSON decode error in OpenLibrary search for ISBN {isbn}")
+    except Exception:
+        logger.exception(f"Unexpected error in OpenLibrary search for ISBN {isbn}")
+
+    return SearchResponseDict(numFound=0)
 
 
 def get_book_details_from_openlibrary_search_results(
