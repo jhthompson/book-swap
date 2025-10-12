@@ -51,6 +51,14 @@ a:hover,
     cursor: pointer;
 }
 
+input:not( :where([type="submit"],
+        [type="checkbox"],
+        [type="radio"],
+        [type="button"],
+        [type="reset"])) {
+    inline-size: 100%;
+}
+
 a[data-badge-count]:after {
     color: var(--primary);
     content: ' (' attr(data-badge-count) ')';
