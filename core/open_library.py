@@ -5,6 +5,8 @@ from typing import TypedDict
 
 logger = logging.getLogger(__name__)
 
+USER_AGENT = "book-swap (https://github.com/jhthompson/book-swap)"
+
 
 class EditionDict(TypedDict, total=False):
     key: str
@@ -72,9 +74,11 @@ class SearchResponseDict(TypedDict, total=False):
 # }
 def search_openlibrary_by_isbn(isbn: str) -> SearchResponseDict:
     url = f"https://openlibrary.org/search.json?q=isbn:{isbn}&fields=title,key,author_key,author_name,editions"
+    request = urllib.request.Request(url)
+    request.add_header("User-Agent", USER_AGENT)
 
     try:
-        with urllib.request.urlopen(url) as response:
+        with urllib.request.urlopen(request) as response:
             data = json.loads(response.read().decode())
         return SearchResponseDict(**data)
 
