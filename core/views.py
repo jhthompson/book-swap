@@ -17,7 +17,7 @@ from django.shortcuts import redirect, render
 from core.forms import (
     BookListingSelectionForm,
     BookListingSelectionFormSet,
-    NewBookListingIsbnPromptForm,
+    IsbnForm,
     NewBookListingForm,
 )
 from core.models import BookListing, BookSwap, BookSwapEvent, OpenLibraryAuthor
@@ -59,7 +59,7 @@ def listings(request: HttpRequest):
 @login_required
 def new_listing_isbn_prompt(request: HttpRequest):
     if request.method == "POST":
-        form = NewBookListingIsbnPromptForm(request.POST, request.FILES)
+        form = IsbnForm(request.POST, request.FILES)
 
         if form.is_valid():
             form_isbn = form.cleaned_data.get("isbn")
@@ -67,12 +67,19 @@ def new_listing_isbn_prompt(request: HttpRequest):
 
             isbn = form_isbn or extract_isbn_from_barcode_image(form_barcode)
 
-            return redirect("new_listing_from_isbn", isbn=isbn)
+            if isbn:
+                return redirect("new_listing_from_isbn", isbn=isbn)
+            else:
+                messages.warning(
+                    request,
+                    "Could not find a valid ISBN. Please enter book details manually.",
+                )
+                return redirect("new_listing")
 
     else:
-        form = NewBookListingIsbnPromptForm()
+        form = IsbnForm()
 
-    return render(request, "core/new_listing.html", {"form": form})
+    return render(request, "core/new_listing_isbn_prompt.html", {"form": form})
 
 
 def extract_isbn_from_barcode_image(barcode) -> str | None:
@@ -140,6 +147,15 @@ def new_listing_from_isbn(request: HttpRequest, isbn: str):
 
     else:
         ol_search_data = search_openlibrary_by_isbn(isbn)
+
+        if ol_search_data.get("numFound", 0) == 0:
+            messages.warning(
+                request,
+                "Could not find book details on OpenLibrary. Please enter details manually.",  # noqa: E501
+            )
+        else:
+            messages.success(request, "Populated book details from OpenLibrary.")
+
         ol_book_details = get_book_details_from_openlibrary_search_results(
             ol_search_data
         )

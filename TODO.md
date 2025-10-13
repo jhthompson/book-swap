@@ -19,7 +19,6 @@
 - [ ] Add a "wishlist" of books you want, and notify when those become available
   - [ ] Probably want same search by ISBN or title to make sure matches are exact
 
-- [ ] Add error handling during listing flow
-  - [ ] barcode image detection fails?
-  - [ ] ISBN lookup on OpenLibrary fails? 
-  - [ ] what if there is no cover image on OpenLibrary? Should they have to take a picture?
+- [x] Add error handling during listing flow
+  - [x] barcode image detection fails?
+  - [x] ISBN lookup on OpenLibrary fails? 

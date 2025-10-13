@@ -3,8 +3,6 @@
 {% block main %}
 <h1 class="center text-align:center color-primary">New Listing</h1>
 
-<p class="center">Finalize the details below before submitting your listing.</p>
-
 <form class="center stack" enctype="multipart/form-data" method="post">
     {% csrf_token %}
     {{ form }}

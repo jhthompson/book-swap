@@ -28,7 +28,14 @@ class BookSwapSignupForm(forms.Form):
         profile.save()
 
 
-class NewBookListingIsbnPromptForm(forms.Form):
+class IsbnForm(forms.Form):
+    """
+    Get an ISBN from either:
+
+      - barcode: EAN13 barcode image
+      - isbn: string
+    """
+
     barcode = forms.ImageField(
         required=False,
         widget=forms.ClearableFileInput(
@@ -64,8 +71,9 @@ class NewBookListingForm(forms.Form):
         validators=[ISBNValidator],
     )
     authors = forms.CharField(
+        label="Author(s)",
         max_length=255,
-        help_text="Enter the author's name(s), separated by commas if multiple.",
+        help_text="Separate multiple authors with commas.",
     )
     cover = forms.ImageField(
         label="Picture of the book's cover",

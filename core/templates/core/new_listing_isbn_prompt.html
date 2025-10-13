@@ -9,7 +9,7 @@
     {% csrf_token %}
     {{ form }}
     <div class="display:flex justify-content:space-between align-items:center">
-        <a href="{% url 'new_listing' %}">No ISBN?</a> <!-- TODO: implement manual entry -->
+        <a href="{% url 'new_listing' %}">No ISBN?</a>
         <input class="button" type="submit" value="Submit">
     </div>
 </form>
