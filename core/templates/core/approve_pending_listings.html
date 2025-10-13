@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+
+{% block main %}
+<h1 class="center text-align:center">Pending Book Listings</h1>
+{% if pending_listings %}
+  <form method="post">
+    {% csrf_token %}
+    <table>
+      <thead>
+        <tr>
+          <th>Cover</th>
+          <th>Title</th>
+          <th>Authors</th>
+          <th>Created</th>
+          <th>User</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for listing in pending_listings %}
+        <tr>
+          <td>
+            {% if listing.cover %}
+              <img src="{{ listing.cover.url }}" alt="Cover" style="max-width:80px;max-height:120px;" />
+            {% else %}
+              <span>No cover</span>
+            {% endif %}
+          </td>
+          <td>{{ listing.title }}</td>
+          <td>{{ listing.authors }}</td>
+          <td title="{{ listing.created_at }}">{{ listing.created_at|timesince }} ago</td>
+          <td>{{ listing.owner.username }}</td>
+          <td>
+            <button name="action" value="approve" type="submit" formaction="?listing_id={{ listing.id }}">Approve</button>
+            <button name="action" value="reject" type="submit" formaction="?listing_id={{ listing.id }}">Reject</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
+{% else %}
+  <p>No pending listings to approve.</p>
+{% endif %}
+{% endblock main %}

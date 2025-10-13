@@ -5,13 +5,14 @@ from PIL import Image
 
 from django import forms
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.gis.geos import Polygon
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Prefetch, Q
-from django.http import HttpRequest, JsonResponse
+from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import redirect, render
 
 from core.forms import (
@@ -578,3 +579,47 @@ def book_listings_api(request: HttpRequest):
     ]
 
     return JsonResponse({"results": results})
+
+
+@staff_member_required
+def approve_pending_listings(request):
+    pending_listings = BookListing.objects.filter(
+        status=BookListing.Status.PENDING
+    ).order_by("created_at")
+
+    if request.method == "POST":
+        listing_id = request.GET.get("listing_id") or request.POST.get("listing_id")
+        action = request.POST.get("action")
+
+        try:
+            listing = BookListing.objects.get(
+                id=listing_id,
+                status=BookListing.Status.PENDING,
+            )
+        except BookListing.DoesNotExist:
+            return HttpResponseBadRequest(
+                "Invalid listing ID or listing already approved."
+            )
+
+        if action == "approve":
+            if listing.approve():
+                messages.success(
+                    request,
+                    f"Listing '{listing.title}' has been approved (marked as AVAILABLE).",  # noqa: E501
+                )
+        elif action == "reject":
+            if listing.remove():
+                messages.success(
+                    request,
+                    f"Listing '{listing.title}' has been rejected (marked as REMOVED).",
+                )
+        else:
+            return HttpResponseBadRequest("Invalid action.")
+
+        return redirect("approve_pending_listings")
+
+    return render(
+        request,
+        "core/approve_pending_listings.html",
+        {"pending_listings": pending_listings},
+    )

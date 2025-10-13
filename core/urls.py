@@ -3,6 +3,8 @@ from django.urls import path
 from core import views
 
 urlpatterns = [
+    # admin
+    path("approve", views.approve_pending_listings, name="approve_pending_listings"),
     # listings
     path("listings", views.listings, name="listings"),
     path("listings/new", views.new_listing, name="new_listing"),
@@ -27,7 +29,7 @@ urlpatterns = [
     path("swaps/<int:id>/accept", views.accept_swap, name="accept_swap"),
     path("swaps/<int:id>/complete", views.complete_swap, name="complete_swap"),
     path("swaps/<int:id>/decline", views.decline_swap, name="decline_swap"),
-    # search
+    # discovery
     path("search", views.search, name="search"),
     path("map", views.map_view, name="map"),
     # API

@@ -59,6 +59,30 @@ input:not( :where([type="submit"],
     inline-size: 100%;
 }
 
+table {
+    caption-side: bottom;
+    border-collapse: collapse;
+
+    td {
+        font-size: 90%;
+    }
+
+    td,
+    th {
+        word-break: normal;
+        border: 1px solid gray;
+        padding: 0.5rem;
+    }
+}
+
+[role="region"][aria-labelledby][tabindex] {
+    overflow: auto;
+}
+
+caption {
+    font-size: 90%;
+}
+
 a[data-badge-count]:after {
     color: var(--primary);
     content: ' (' attr(data-badge-count) ')';

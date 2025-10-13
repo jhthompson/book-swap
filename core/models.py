@@ -97,6 +97,14 @@ class BookListing(models.Model):
 
         return False
 
+    def approve(self):
+        if self.status == self.Status.PENDING:
+            self.status = self.Status.AVAILABLE
+            self.save()
+            return True
+
+        return False
+
 
 class BookSwap(models.Model):
     #       User (A) proposes a swap to User (B)
