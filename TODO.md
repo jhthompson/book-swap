@@ -8,7 +8,7 @@
 - [x] Edit profile
   - [x] Change city
   - [x] Change location
-  - [ ] Update/add email 
+  - [x] Update/add email 
 - [ ] View profile
   - [ ] How many swaps?
   - [x] City
