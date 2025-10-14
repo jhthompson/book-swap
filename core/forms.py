@@ -9,7 +9,7 @@ from core.models import BookListing, UserProfile
 
 
 class BookSwapSignupForm(forms.Form):
-    city = forms.CharField()
+    city = forms.CharField(max_length=100)
     location = LocationField(
         based_fields=["city"],
         initial=Point(
@@ -26,6 +26,19 @@ class BookSwapSignupForm(forms.Form):
             location=self.cleaned_data["location"],
         )
         profile.save()
+
+
+class EditProfileForm(forms.Form):
+    username = forms.CharField(max_length=150)
+    city = forms.CharField(max_length=100)
+    location = LocationField(
+        based_fields=["city"],
+        initial=Point(
+            -75.6901106,
+            45.4208777,
+        ),
+        help_text="Select the general area where you want to swap books. ",
+    )
 
 
 class IsbnForm(forms.Form):

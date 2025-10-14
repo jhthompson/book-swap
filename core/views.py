@@ -13,11 +13,12 @@ from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Prefetch, Q
 from django.http import HttpRequest, HttpResponseBadRequest, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from core.forms import (
     BookListingSelectionForm,
     BookListingSelectionFormSet,
+    EditProfileForm,
     IsbnForm,
     NewBookListingForm,
 )
@@ -43,6 +44,60 @@ def index(request: HttpRequest):
     context["listings"] = listings
 
     return render(request, "core/index.html", context)
+
+
+def profile(request: HttpRequest, id: int):
+    context = {}
+    context["profile_user"] = get_object_or_404(User, id=id)
+
+    return render(request, "core/profile.html", context)
+
+
+@login_required
+def edit_profile(request: HttpRequest, id: int):
+    context = {}
+
+    editable_user = get_object_or_404(User, id=id)
+
+    if request.user != editable_user:
+        raise PermissionDenied()
+
+    if request.method == "POST":
+        form = EditProfileForm(request.POST)
+
+        if form.is_valid():
+            new_username = form.cleaned_data.get("username")
+            new_city = form.cleaned_data.get("city")
+            new_location = form.cleaned_data.get("location")
+
+            if (
+                User.objects.exclude(id=editable_user.id)
+                .filter(username=new_username)
+                .exists()
+            ):
+                form.add_error("username", "This username is already taken.")
+            else:
+                editable_user.username = new_username
+                editable_user.save()
+
+                editable_user.userprofile.city = new_city
+                editable_user.userprofile.location = new_location
+                editable_user.userprofile.save()
+
+                messages.success(request, "Profile updated.")
+                return redirect("profile", id=editable_user.id)
+    else:
+        form = EditProfileForm(
+            initial={
+                "username": editable_user.username,
+                "city": editable_user.userprofile.city,
+                "location": editable_user.userprofile.location,
+            }
+        )
+
+    context["form"] = form
+
+    return render(request, "core/edit_profile.html", context)
 
 
 @login_required

@@ -34,6 +34,9 @@ urlpatterns = [
     path("map", views.map_view, name="map"),
     # API
     path("api/book-listings/", views.book_listings_api, name="book_listings_api"),
+    # profile
+    path("profile/<int:id>", views.profile, name="profile"),
+    path("profile/<int:id>/edit", views.edit_profile, name="edit_profile"),
     # index
     path("", views.index, name="index"),
 ]

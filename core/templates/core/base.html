@@ -25,17 +25,16 @@
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'listings' %}">Listings</a></li>
                     <li><a href="{% url 'swaps' %}" {% if open_swaps_count %}data-badge-count="{{ open_swaps_count }}"{% endif %}>Swaps</a></li>
-                {% endif %}
-                <li>
-                    {% if user.is_authenticated %}  
+                    <li class="right"><a href="{% url 'profile' user.id %}">Profile</a></li>
+                    <li>
                         <form action="{% url 'account_logout' %}" method="post">
                             {% csrf_token %}
                             <button class="link" type="submit">Log Out</button>
                         </form>
-                    {% else %}
-                        <a href="{% url 'account_login' %}">Log In</a>
-                    {% endif %}
-                </li>
+                    </li>
+                {% else %}
+                    <li class="right"><a href="{% url 'account_login' %}">Log In</a></li>
+                {% endif %}
             </ol>
         </nav>
     </header>

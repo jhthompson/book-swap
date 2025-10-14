@@ -5,10 +5,14 @@
 - [x] What to do with deleted listings? Should it be a soft delete, related to the "completed" state when a swap is over perhaps?
 - [x] Improve style of signup & login forms (likely override allauth templates)
 - [x] Add continued messaging functionality... once "accepted", can message one another?
-- [ ] Edit profile
-  - [ ] Change city
-  - [ ] Change location
+- [x] Edit profile
+  - [x] Change city
+  - [x] Change location
   - [ ] Update/add email 
+- [ ] View profile
+  - [ ] How many swaps?
+  - [x] City
+  - [x] Member since ...
 - [ ] Add genres to listings
 - [x] "Admin approval" step before listings are public?
   - [x] Create listings with PENDING state
