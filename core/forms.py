@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.gis.geos import Point
 from django.core.exceptions import ValidationError
 
-from core.models import BookListing, UserProfile
+from core.models import BookListing, Genre, UserProfile
 
 
 class BookSwapSignupForm(forms.Form):
@@ -91,6 +91,10 @@ class NewBookListingForm(forms.Form):
     cover = forms.ImageField(
         label="Picture of the book's cover",
         widget=forms.ClearableFileInput(attrs={"accept": "image/*"}),
+    )
+    genres = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple,
+        choices=[(g, g) for g in Genre.COMMON_GENRES],
     )
 
     # populated from OpenLibrary API lookup

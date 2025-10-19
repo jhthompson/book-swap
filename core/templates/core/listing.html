@@ -7,12 +7,10 @@
         <div>
             <h1 class="color-primary">{{ listing.title }}</h1>
             <h2>{{ listing.authors }}</h2>
-            <small class="display:block">Added {{ listing.created_at|timesince }} ago</small>
+            <small class="display:block"><i class="bi bi-tag margin-inline-end:s-3 color:muted"></i>{{ listing.genres.all|join:", " }}</small>
+            <small class="display:block"><i class="bi bi-clock margin-inline-end:s-3 color:muted"></i>{{ listing.created_at|timesince }} ago</small>
             {% if listing.status == "PENDING" %}
-                <i style="color: orange;" class="bi bi-exclamation-circle"></i>
-                <small>
-                    Pending admin approval
-                </small>
+            <small class="display:block"><i style="color: orange;" class="bi bi-exclamation-circle margin-inline-end:s-3"></i>Pending admin approval</small>
             {% endif %}
         </div>
     </div>

@@ -22,7 +22,7 @@ from core.forms import (
     IsbnForm,
     NewBookListingForm,
 )
-from core.models import BookListing, BookSwap, BookSwapEvent, OpenLibraryAuthor
+from core.models import BookListing, BookSwap, BookSwapEvent, Genre, OpenLibraryAuthor
 from core.open_library import (
     get_book_details_from_openlibrary_search_results,
     search_openlibrary_by_isbn,
@@ -163,6 +163,7 @@ def new_listing_from_isbn(request: HttpRequest, isbn: str):
             isbn = form.cleaned_data.get("isbn")
             authors = form.cleaned_data.get("authors")
             cover = request.FILES["cover"]
+            genre_names = form.cleaned_data.get("genres", [])
 
             openlibrary_edition_id = form.cleaned_data.get("openlibrary_edition_id", "")
             openlibrary_work_id = form.cleaned_data.get("openlibrary_work_id", "")
@@ -172,6 +173,9 @@ def new_listing_from_isbn(request: HttpRequest, isbn: str):
             openlibrary_author_names = form.cleaned_data.get(
                 "openlibrary_author_names", ""
             ).split(",")
+
+            # genres
+            genres = Genre.objects.filter(name__in=genre_names)
 
             # OpenLibrary Authors
             openlibrary_authors = []
@@ -196,6 +200,7 @@ def new_listing_from_isbn(request: HttpRequest, isbn: str):
                 openlibrary_work_id=openlibrary_work_id,
             )
             listing.openlibrary_authors.set(openlibrary_authors)
+            listing.genres.set(genres)
             listing.save()
 
             messages.success(request, "Book listing created.")

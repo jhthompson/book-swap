@@ -41,6 +41,45 @@ class OpenLibraryAuthor(models.Model):
         return self.name
 
 
+class Genre(models.Model):
+    COMMON_GENRES = [
+        # top-level genres
+        "Fiction",
+        "Non-Fiction",
+        "Young Adult",
+        "Children",
+        # fiction sub-genres
+        "Romance",
+        "Sci-Fi",
+        "Fantasy",
+        "Thrillers",
+        "Mystery & Suspense",
+        "Manga",
+        "Literary Fiction",
+        "Historical Fiction",
+        "Horror",
+        "Graphic Novels",
+        "Poetry",
+        # non-fiction sub-genres
+        "Biography & Memoir",
+        "Business",
+        "Cookbooks",
+        "Colouring Books",
+        "Faith & Spirituality",
+        "Health",
+        "History & Politics",
+        "Music, Movies & Performing Arts",
+        "Parenting & Family Relationships",
+        "Science & Nature",
+        "Self-Help & Wellness",
+    ]
+
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class BookListing(models.Model):
     class Status(models.TextChoices):
         PENDING = "PENDING", "Pending"
@@ -53,6 +92,7 @@ class BookListing(models.Model):
     isbn = ISBNField(null=True, blank=True)
     authors = models.CharField(max_length=255)
     cover = models.ImageField(upload_to="book_listing_covers/")
+    genres = models.ManyToManyField(Genre, blank=True)
 
     # metadata
     owner = models.ForeignKey(User, on_delete=models.CASCADE)

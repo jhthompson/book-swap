@@ -14,6 +14,9 @@
   - [x] City
   - [x] Member since ...
 - [ ] Add genres to listings
+  - [x] Store genres for listings
+  - [x] Display genres
+  - [ ] Create genre pages? Search by genre?
 - [x] "Admin approval" step before listings are public?
   - [x] Create listings with PENDING state
   - [x] Some sort of page to view all PENDING listings (i.e. preview image, title, authors) and approve or deny them 

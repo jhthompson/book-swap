@@ -6,9 +6,15 @@ from core.models import (
     BookSwap,
     BookSwapEvent,
     BookSwapMessage,
+    Genre,
     OpenLibraryAuthor,
     UserProfile,
 )
+
+
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(OpenLibraryAuthor)

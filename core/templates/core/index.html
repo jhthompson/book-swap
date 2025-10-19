@@ -21,6 +21,7 @@
                     <div class="margin-block-start:s-2">
                         <h3 class="margin:0">{{ listing.title }}</h3>
                         <p class="margin:0">{{ listing.authors }}</p>
+                        <small class="display:block"><i class="bi bi-tag margin-inline-end:s-3"></i>{{ listing.genres.all|join:", " }}</small>
                         <small class="display:block"><i class="bi bi-geo-alt margin-inline-end:s-3"></i>{{ listing.get_city }}</small>
                         <a class="button margin-block-start:s-2 width:100" href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">
                             <i class="bi bi-arrow-left-right margin-inline-end:s-2"></i>Swap

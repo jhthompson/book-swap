@@ -5,12 +5,13 @@
 <ul class="center stack padding:0">
 {% for listing in page_obj %}
     <li class="box list-style:none" style="display: flex; gap: var(--s0)">
-        <img src="{{ listing.cover.url }}" alt="Cover for {{ listing.title }}" style="width:100px;"></img>
+        <img src="{{ listing.cover.url }}" alt="Cover for {{ listing.title }}" style="width:100px; align-self: flex-start;"></img>
         <div style="flex: 1;">
             <h2>{{ listing.title }}</h2>
             <p class=>{{ listing.authors }}</p>
-            <p class="color:muted"><i class="bi bi-geo-alt margin-inline-end:s-4"></i>{{ listing.get_city }}</p>
-            <p class="color:muted"><i class="bi bi-clock margin-inline-end:s-3"></i>{{ listing.created_at|timesince }} ago ({{ listing.created_at|date:"F j, Y" }})</p>
+            <small class="display:block"><i class="bi bi-tag margin-inline-end:s-3 color:muted"></i>{{ listing.genres.all|join:", " }}</small>
+            <small class="display:block"><i class="bi bi-geo-alt margin-inline-end:s-3 color:muted"></i>{{ listing.get_city }}</small>
+            <small class="display:block"><i class="bi bi-clock margin-inline-end:s-3 color:muted"></i>{{ listing.created_at|timesince }} ago</small>
             <a style="margin-inline-start: auto;" class="button" href="{% url 'new_swap' %}?proposed_to={{ listing.owner.id }}&requested_book_listing_ids={{ listing.id }}">
                 <i class="bi bi-arrow-left-right margin-inline-end:s-2"></i>Swap
             </a>

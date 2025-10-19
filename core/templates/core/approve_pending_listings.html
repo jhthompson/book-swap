@@ -11,6 +11,7 @@
           <th>Cover</th>
           <th>Title</th>
           <th>Authors</th>
+          <th>Genres</th>
           <th>Created</th>
           <th>User</th>
           <th>Actions</th>
@@ -28,6 +29,7 @@
           </td>
           <td>{{ listing.title }}</td>
           <td>{{ listing.authors }}</td>
+          <td>{{ listing.genres.all|join:", " }}</td>
           <td title="{{ listing.created_at }}">{{ listing.created_at|timesince }} ago</td>
           <td>{{ listing.owner.username }}</td>
           <td>
