@@ -25,3 +25,4 @@ reset:
     uv run manage.py migrate
     DJANGO_SUPERUSER_PASSWORD=test uv run manage.py createsuperuser --no-input --username=admin --email=admin@test.com
     uv run manage.py create_user_profile admin --city="Ottawa" --latitude=45.4215 --longitude=-75.6972
+    uv run manage.py verify_user_email admin
