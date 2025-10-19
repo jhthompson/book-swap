@@ -582,7 +582,7 @@ def search(request: HttpRequest):
 
     if query:
         queryset = queryset.filter(title__icontains=query) | queryset.filter(
-            author__icontains=query
+            authors__icontains=query
         )
 
     if request.user.is_authenticated:
