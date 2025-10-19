@@ -15,7 +15,7 @@ migrate:
     uv run manage.py migrate
 
 # Recreate the database and admin account
-reset:
+reset-for-local-development:
     psql -U postgres -d postgres -c "DROP DATABASE IF EXISTS bookswap;"
     psql -U postgres -d postgres -c "DROP ROLE IF EXISTS bookswap;"
     psql -U postgres -d postgres -c "CREATE ROLE bookswap WITH LOGIN PASSWORD 'bookswap';"
