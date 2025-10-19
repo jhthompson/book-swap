@@ -1,5 +1,11 @@
 
-- [ ] Improve search (sort by distance? use Postgres text search instead of icontains?)
+- [ ] Improve search experience
+  - [ ] Text search
+    - [ ] Add genre filtering
+    - [ ] Add sorting (relevance, distance, date added?)
+    - [ ] Investigate Postgres text search instead of icontains? Worth it or not?
+  - [ ] Map search
+    - [ ] Add same capabilities as text search, minus location ones (as map already does that)
 - [ ] View profile
   - [ ] How many swaps?
   - [x] City
