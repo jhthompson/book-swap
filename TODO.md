@@ -7,7 +7,7 @@
   - [ ] Map search
     - [ ] Add same capabilities as text search, minus location ones (as map already does that)
 - [ ] View profile
-  - [ ] How many swaps?
+  - [ ] How many swaps have you made?
   - [x] City
   - [x] Member since ...
 - [ ] Add genres to listings
