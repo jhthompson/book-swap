@@ -6,7 +6,7 @@
     - [ ] Investigate Postgres text search instead of icontains? Worth it or not?
   - [ ] Map search
     - [ ] Add same capabilities as text search, minus location ones (as map already does that)
-    - [ ] Likely add custom Leaflet controls
+    - [ ] Likely add custom Leaflet controls (https://leafletjs.com/examples/extending/extending-3-controls.html#controls)
 - [ ] View profile
   - [ ] How many swaps have you made?
   - [x] City
