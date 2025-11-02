@@ -10,25 +10,41 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
+
+import dj_database_url
+import sentry_sdk
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Sentry
+if os.getenv("SENTRY_DSN"):
+    sentry_sdk.init(
+        dsn=os.getenv("SENTRY_DSN"),
+        send_default_pii=True,
+    )
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-(isyd2yq6n4h7!n@_7nh0vmt%j%0^_lpqz4l-p#=wz41p_q1kr"
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [] if DEBUG else ["books4books.org"]
 
-INTERNAL_IPS = ["127.0.0.1"]
-
+if DEBUG:
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
 
 # Application definition
 
@@ -96,12 +112,10 @@ WSGI_APPLICATION = "bookswap.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.contrib.gis.db.backends.postgis",
-        "NAME": "bookswap",
-        "USER": "bookswap",
-        "PASSWORD": "password",
-    },
+    "default": dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
 }
 
 
@@ -139,14 +153,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "/static/"
+STATIC_ROOT = os.getenv("STATIC_ROOT", BASE_DIR / "files/static")
 
 
 # Media files (user-uploaded files)
 
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "uploads"
+MEDIA_ROOT = os.getenv("MEDIA_ROOT", BASE_DIR / "files/media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -163,6 +177,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Email
+
+DEFAULT_FROM_EMAIL = "Books4Books <noreply@books4books.org>"
+SERVER_EMAIL = "Books4Books <noreply@books4books.org>"
+ADMINS = [("Admin", "admin@books4books.org")]
 
 if DEBUG:
     EMAIL_BACKEND = "mail_panel.backend.MailToolbarBackend"
