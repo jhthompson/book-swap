@@ -16,12 +16,12 @@ migrate:
 
 # Recreate the database and admin account
 reset-for-local-development:
-    psql -U postgres -d postgres -c "DROP DATABASE IF EXISTS bookswap;"
-    psql -U postgres -d postgres -c "DROP ROLE IF EXISTS bookswap;"
-    psql -U postgres -d postgres -c "CREATE ROLE bookswap WITH LOGIN PASSWORD 'bookswap';"
-    psql -U postgres -d postgres -c "CREATE DATABASE bookswap WITH OWNER bookswap;"
-    psql -U postgres -d bookswap -c "GRANT ALL PRIVILEGES ON DATABASE bookswap TO bookswap;"
-    psql -U postgres -d bookswap -c "CREATE EXTENSION postgis;"
+    psql -U postgres -d postgres -c "DROP DATABASE IF EXISTS books4books;"
+    psql -U postgres -d postgres -c "DROP ROLE IF EXISTS books4books;"
+    psql -U postgres -d postgres -c "CREATE ROLE books4books WITH LOGIN PASSWORD 'books4books';"
+    psql -U postgres -d postgres -c "CREATE DATABASE books4books WITH OWNER books4books;"
+    psql -U postgres -d books4books -c "GRANT ALL PRIVILEGES ON DATABASE books4books TO books4books;"
+    psql -U postgres -d books4books -c "CREATE EXTENSION postgis;"
     uv run manage.py migrate
     DJANGO_SUPERUSER_PASSWORD=test uv run manage.py createsuperuser --no-input --username=admin --email=admin@test.com
     uv run manage.py create_user_profile admin --city="Ottawa" --latitude=45.4215 --longitude=-75.6972

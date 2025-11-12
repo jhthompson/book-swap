@@ -1,5 +1,5 @@
 [project]
-name = "book-swap"
+name = "books4books"
 version = "0.1.0"
 description = "Django application for swapping books"
 readme = "README.md"
